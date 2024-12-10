@@ -1,0 +1,131 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #0B0D17; /* Cosmic Black */
+    color: #F5F7FA; /* Nebula White */
+    line-height: 1.6;
+}
+
+header {
+    background: linear-gradient(135deg, #1C1F3B, #6A4C93); /* Stellar Navy to Nebula Purple */
+    color: #F5F7FA;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    position: relative; /* Ensure no overlap with content */
+    z-index: 10;
+    width: 100%;
+    box-sizing: border-box;
+    top: 0;
+}
+
+.header-logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-logo-container img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); 
+    margin-right: 1rem;
+}
+
+header nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+header nav ul li {
+    margin: 0 1rem;
+}
+
+header nav a {
+    color: #37E2D5; /* Aurora Green */
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+header nav a:hover {
+    color: #FF6584; /* Supernova Pink */
+    text-shadow: 0 0 5px #FF6584;
+}
+
+main {
+    padding: 2rem;
+    background-color: #1C1F3B; /* Stellar Navy */
+    border-radius: 10px;
+    margin: 2rem auto;
+    max-width: 900px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+main h2 {
+    color: #FF6584; /* Supernova Pink */
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    font-size: 2rem;
+}
+
+main p {
+    color: #B8C1CC; /* Starry Gray */
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+}
+
+footer {
+    background: #0B0D17; /* Cosmic Black */
+    color: #B8C1CC; /* Starry Gray */
+    text-align: center;
+    padding: 1rem 0;
+    border-top: 1px solid #6A4C93; /* Nebula Purple */
+}
+
+footer p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+footer a {
+    color: #37E2D5; /* Aurora Green */
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: #FF6584; /* Supernova Pink */
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    header nav ul {
+        flex-direction: column;
+    }
+
+    header nav ul li {
+        margin: 0.5rem 0;
+    }
+
+    main {
+        padding: 1rem;
+        margin: 1rem auto;
+    }
+
+    header nav a {
+        font-size: 1rem;
+    }
+}

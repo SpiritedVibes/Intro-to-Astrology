@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astrology Quiz</title>
+</head>
+<body>
+    <h1>{{ quiz.title }}</h1>
+    <p>{{ quiz.description }}</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <!-- Question 1 -->
+        <div class="question">
+            <h2>What is the main sign associated with Aries?</h2>
+            <input type="radio" id="answer_1" name="question_1" value="1">
+            <label for="answer_1">Leo</label><br>
+            <input type="radio" id="answer_2" name="question_1" value="2">
+            <label for="answer_2">Virgo</label><br>
+            <input type="radio" id="answer_3" name="question_1" value="3">
+            <label for="answer_3">Aries</label><br>
+            <input type="radio" id="answer_4" name="question_1" value="4">
+            <label for="answer_4">Capricorn</label><br>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="question">
+            <h2>Which of the following planets is associated with love and beauty?</h2>
+            <input type="radio" id="answer_5" name="question_2" value="1">
+            <label for="answer_5">Mars</label><br>
+            <input type="radio" id="answer_6" name="question_2" value="2">
+            <label for="answer_6">Venus</label><br>
+            <input type="radio" id="answer_7" name="question_2" value="3">
+            <label for="answer_7">Jupiter</label><br>
+            <input type="radio" id="answer_8" name="question_2" value="4">
+            <label for="answer_8">Saturn</label><br>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="question">
+            <h2>What element is associated with the zodiac sign Cancer?</h2>
+            <input type="radio" id="answer_9" name="question_3" value="1">
+            <label for="answer_9">Fire</label><br>
+            <input type="radio" id="answer_10" name="question_3" value="2">
+            <label for="answer_10">Water</label><br>
+            <input type="radio" id="answer_11" name="question_3" value="3">
+            <label for="answer_11">Earth</label><br>
+            <input type="radio" id="answer_12" name="question_3" value="4">
+            <label for="answer_12">Air</label><br>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="question">
+            <h2>Which zodiac sign is ruled by the planet Mercury?</h2>
+            <input type="radio" id="answer_13" name="question_4" value="1">
+            <label for="answer_13">Leo</label><br>
+            <input type="radio" id="answer_14" name="question_4" value="2">
+            <label for="answer_14">Gemini</label><br>
+            <input type="radio" id="answer_15" name="question_4" value="3">
+            <label for="answer_15">Pisces</label><br>
+            <input type="radio" id="answer_16" name="question_4" value="4">
+            <label for="answer_16">Taurus</label><br>
+        </div>
+
+        <!-- Question 5 -->
+        <div class="question">
+            <h2>Which zodiac sign is known for being particularly stubborn?</h2>
+            <input type="radio" id="answer_17" name="question_5" value="1">
+            <label for="answer_17">Taurus</label><br>
+            <input type="radio" id="answer_18" name="question_5" value="2">
+            <label for="answer_18">Gemini</label><br>
+            <input type="radio" id="answer_19" name="question_5" value="3">
+            <label for="answer_19">Scorpio</label><br>
+            <input type="radio" id="answer_20" name="question_5" value="4">
+            <label for="answer_20">Capricorn</label><br>
+        </div>
+
+        <!-- Question 6 -->
+        <div class="question">
+            <h2>In astrology, the "big three" refers to which three components of your astrological chart?</h2>
+            <input type="radio" id="answer_21" name="question_6" value="1">
+            <label for="answer_21">Sun, Moon, and Venus</label><br>
+            <input type="radio" id="answer_22" name="question_6" value="2">
+            <label for="answer_22">Sun, Moon, and Rising Sign</label><br>
+            <input type="radio" id="answer_23" name="question_6" value="3">
+            <label for="answer_23">Venus, Mars, and Jupiter</label><br>
+            <input type="radio" id="answer_24" name="question_6" value="4">
+            <label for="answer_24">Rising Sign, Mercury, and Venus</label><br>
+        </div>
+
+        <!-- Question 7 -->
+        <div class="question">
+            <h2>What is the astrological sign of someone born on September 22nd?</h2>
+            <input type="radio" id="answer_25" name="question_7" value="1">
+            <label for="answer_25">Virgo</label><br>
+            <input type="radio" id="answer_26" name="question_7" value="2">
+            <label for="answer_26">Libra</label><br>
+            <input type="radio" id="answer_27" name="question_7" value="3">
+            <label for="answer_27">Scorpio</label><br>
+            <input type="radio" id="answer_28" name="question_7" value="4">
+            <label for="answer_28">Aries</label><br>
+        </div>
+
+        <!-- Question 8 -->
+        <div class="question">
+            <h2>Which zodiac sign is associated with the element of fire?</h2>
+            <input type="radio" id="answer_29" name="question_8" value="1">
+            <label for="answer_29">Capricorn</label><br>
+            <input type="radio" id="answer_30" name="question_8" value="2">
+            <label for="answer_30">Leo</label><br>
+            <input type="radio" id="answer_31" name="question_8" value="3">
+            <label for="answer_31">Taurus</label><br>
+            <input type="radio" id="answer_32" name="question_8" value="4">
+            <label for="answer_32">Pisces</label><br>
+        </div>
+
+        <!-- Question 9 -->
+        <div class="question">
+            <h2>Which planet is associated with communication in astrology?</h2>
+            <input type="radio" id="answer_33" name="question_9" value="1">
+            <label for="answer_33">Jupiter</label><br>
+            <input type="radio" id="answer_34" name="question_9" value="2">
+            <label for="answer_34">Mercury</label><br>
+            <input type="radio" id="answer_35" name="question_9" value="3">
+            <label for="answer_35">Saturn</label><br>
+            <input type="radio" id="answer_36" name="question_9" value="4">
+            <label for="answer_36">Neptune</label><br>
+        </div>
+
+        <!-- Question 10 -->
+        <div class="question">
+            <h2>Which zodiac sign is known for being highly social and adventurous?</h2>
+            <input type="radio" id="answer_37" name="question_10" value="1">
+            <label for="answer_37">Aries</label><br>
+            <input type="radio" id="answer_38" name="question_10" value="2">
+            <label for="answer_38">Sagittarius</label><br>
+            <input type="radio" id="answer_39" name="question_10" value="3">
+            <label for="answer_39">Pisces</label><br>
+            <input type="radio" id="answer_40" name="question_10" value="4">
+            <label for="answer_40">Cancer</label><br>
+        </div>
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
