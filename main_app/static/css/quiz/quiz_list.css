@@ -1,0 +1,121 @@
+body {
+  background: #111111;
+  color: #f0f0f0; 
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+
+@keyframes stars {
+  0% { background-position: 0 0; }
+  100% { background-position: 100% 100%; }
+}
+
+body {
+  background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat, #111111;
+  background-size: cover;
+  animation: stars 200s linear infinite;
+}
+
+.quiz-container {
+  width: 80%;
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.6); 
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+
+h1 {
+  text-align: center;
+  color: #4c9aff; 
+  font-size: 4em;
+  text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.7); 
+  margin-bottom: 30px;
+}
+
+p {
+  font-size: 25px;
+  color: #c4c4c4;
+  margin-bottom: 40px;
+}
+
+
+.quiz-item {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e6e6e6;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.quiz-item:hover {
+  background: rgba(255, 255, 255, 0.2); 
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+}
+
+
+.quiz-item h2 {
+  color: #ffcc00; 
+  font-size: 1.8em;
+  margin-bottom: 10px;
+}
+
+.quiz-item p {
+  font-size: 1.2em;
+  color: #c8c8c8;
+}
+
+
+button {
+  background-color: #4c9aff; 
+  color: #fff;
+  font-size: 1.2em;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+  display: block;
+  width: 100%;
+}
+
+button:hover {
+  background-color: #1d78d1;
+}
+
+@media (max-width: 768px) {
+  body {
+      font-size: 16px; 
+  }
+
+  .quiz-container {
+      width: 90%;
+      padding: 15px;
+  }
+
+  .quiz-item h2 {
+      font-size: 1.5em;
+  }
+
+  .quiz-item p {
+      font-size: 1em;
+  }
+
+  button {
+      font-size: 1em;
+      padding: 8px 15px;
+  }
+}

@@ -5,8 +5,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" type="image/png" href="main_app/static/images/Logo.webp" />
-    <title>Into to Astrology</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/Logo.webp' %}" />
+    <title>Intro to Astrology</title>
     <link rel="stylesheet" href="{% static 'css/base.css' %}" />
     {% block head %} 
     {% endblock %}
@@ -15,19 +15,21 @@
     <header>
       <div class="header-logo-container">
         <a href="/">
-          <img src="{% static 'images/Logo.webp' %}" alt="Into to Astrology Logo" />
+          <img src="{% static 'images/Logo.webp' %}" alt="Intro to Astrology Logo" />
         </a>
       </div>
       <nav>
         <ul>
-          <li><a href="/about">About</a></li>
-          <li><a href="/quiz">Quiz</a></li>
+          <li><a href="{% url 'about' %}">About</a></li>
+          <li><a href="{% url 'quiz_list' %}">Quizzes</a></li>
+          <li><a href="{% url 'home' %}">Login</a></li>
+          <li><a href="{% url 'signup' %}">Sign Up</a></li>
         </ul>
       </nav>
     </header>
     <main>
-     {% block content %} 
-     {% endblock %}
-     </main>
+      {% block content %} 
+      {% endblock %}
+    </main>
   </body>
 </html>

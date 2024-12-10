@@ -1,14 +1,16 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Results</title>
+    <link rel="stylesheet" href="{% static 'css/quiz/quiz_result.css' %}">
 </head>
 <body>
-    <h1>Quiz Complete!</h1>
-    <p>You scored {{ score }} out of {{ total }}.</p>
-    <a href="{% url 'quiz' %}">Try again</a>
+    <h1>Quiz Results for {{ quiz.title }}</h1>
+    <p>Your score: {{ score }} out of {{ quiz.questions.count }}</p>
+    <a href="{% url 'quiz_list' %}">Take another quiz</a>
 </body>
 </html>

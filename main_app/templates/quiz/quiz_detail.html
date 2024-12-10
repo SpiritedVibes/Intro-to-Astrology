@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ quiz.title }}</title>
+</head>
+<body>
+    <h1>{{ quiz.title }}</h1>
+    <p>{{ quiz.description }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        {% for question in quiz.questions.all %}
+            <div>
+                <p>{{ question.question_text }}</p>
+                {% for answer in question.answers.all %}
+                    <label>
+                        <input type="radio" name="{{ question.id }}" value="{{ answer.answer_text }}">
+                        {{ answer.answer_text }}
+                    </label><br>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
