@@ -6,23 +6,23 @@
 {% block content %}
 
 <div class="card-container">
-        <div class="card">
-            <a href="{% url 'quiz_list' %}">
-                <h2>Explore Quizzes</h2>
-            </a>
-        </div>
+    <div class="card">
+        <a href="{% url 'quiz_list' %}">
+            <h2>Explore Quizzes</h2>
+        </a>
+    </div>
 
-{% if not user.is_authenticated %}
-  <section>
-    <form action="{% url 'home' %}" method="post" class="login">
-      <h1>Login</h1>
-      {% csrf_token %} {{ form.as_p }}
-      <input type="hidden" name="next" value="{{ next }}" />
-      <button type="submit" class="btn submit">Login</button>
-    </form>
-  </section>
-{% endif %}
-
+    {% if not user.is_authenticated %}
+        <section>
+            <form action="{% url 'home' %}" method="post" class="login">
+                <h1>Login</h1>
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="hidden" name="next" value="{{ next }}" />
+                <button type="submit" class="btn submit">Login</button>
+            </form>
+        </section>
+    {% endif %}
+</div>
 
 {% endblock %}
-

@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+{% endblock %}
+{% block content %}
     <title>{{ quiz.title }}</title>
-</head>
-<body>
+
     <h1>{{ quiz.title }}</h1>
     <p>{{ quiz.description }}</p>
 
@@ -15,10 +14,22 @@
             <div>
                 <p>{{ question.question_text }}</p>
                 {% for answer in question.answers.all %}
-                    <label>
-                        <input type="radio" name="{{ question.id }}" value="{{ answer.answer_text }}">
-                        {{ answer.answer_text }}
-                    </label><br>
+                <label>
+                    <input type="radio" name="{{ question.id }}" value="{{ answer.answer_1 }}">
+                    {{ answer.answer_1 }}
+                </label><br>
+                <label>
+                    <input type="radio" name="{{ question.id }}" value="{{ answer.answer_2 }}">
+                    {{ answer.answer_2 }}
+                </label><br>
+                <label>
+                    <input type="radio" name="{{ question.id }}" value="{{ answer.answer_3 }}">
+                    {{ answer.answer_3 }}
+                </label><br>
+                <label>
+                    <input type="radio" name="{{ question.id }}" value="{{ answer.answer_4 }}">
+                    {{ answer.answer_4 }}
+                </label><br>
                 {% endfor %}
             </div>
         {% endfor %}
@@ -26,3 +37,4 @@
     </form>
 </body>
 </html>
+{% endblock %}

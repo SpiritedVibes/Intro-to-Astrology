@@ -1,16 +1,38 @@
-{% load static %}
+<h1>{{ quiz.title }} - Your Result</h1>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Results</title>
-    <link rel="stylesheet" href="{% static 'css/quiz/quiz_result.css' %}">
-</head>
-<body>
-    <h1>Quiz Results for {{ quiz.title }}</h1>
-    <p>Your score: {{ score }} out of {{ quiz.questions.count }}</p>
-    <a href="{% url 'quiz_list' %}">Take another quiz</a>
-</body>
-</html>
+<p>Your score: {{ score }} out of {{ total_questions }}</p>
+
+<h3>Your Answers:</h3>
+<ul>
+    {% for answer in user_answers %}
+        <li>
+            <strong>Question:</strong> {{ answer.question.question_text }}<br>
+            <strong>Your Answer:</strong> 
+            {% if answer.selected_answer.id == 1 %}
+                {{ answer.selected_answer.answer_1 }}
+            {% elif answer.selected_answer.id == 2 %}
+                {{ answer.selected_answer.answer_2 }}
+            {% elif answer.selected_answer.id == 3 %}
+                {{ answer.selected_answer.answer_3 }}
+            {% else %}
+                {{ answer.selected_answer.answer_4 }}
+            {% endif %}
+            <br>
+            {% if answer.is_correct %}
+                <span style="color: green;">Correct!</span>
+            {% else %}
+                <span style="color: red;">Incorrect. The correct answer is: 
+                    {% if answer.selected_answer.correct_answer == 1 %}
+                        {{ answer.selected_answer.answer_1 }}
+                    {% elif answer.selected_answer.correct_answer == 2 %}
+                        {{ answer.selected_answer.answer_2 }}
+                    {% elif answer.selected_answer.correct_answer == 3 %}
+                        {{ answer.selected_answer.answer_3 }}
+                    {% else %}
+                        {{ answer.selected_answer.answer_4 }}
+                    {% endif %}
+                </span>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

@@ -1,34 +1,36 @@
+{% extends 'base.html' %}
 {% load static %}
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block head %}
     <title>Quiz List</title>
     <link rel="stylesheet" href="{% static 'css/quiz/quiz_list.css' %}">
-</head>
-<body>
+    {% endblock %}
+{% block content %}
     <h1>Available Quizzes</h1>
-    
-    {% if request.user.groups.filter().exists %}
+
+    {% if request.user.is_authenticated %}
         <p>Welcome! Explore the quizzes below.</p>
     {% endif %}
-    
-    <ul>
-        {% for quiz in quizzes %}
-            <li>
-                <a href="{% url 'quiz_detail' quiz.id %}">{{ quiz.title }}</a>
-                <p>{{ quiz.description }}</p>
-                
-                {% if request.user.groups.filter(name='Admin').exists %}
-                    <div class="admin-actions">
-                        <a href="{% url 'create_quiz' %}">Create Quiz</a> |
-                        <a href="{% url 'delete_quiz' quiz.id %}">Delete Quiz</a>
+
+    {% if quizzes %}
+        <ul>
+            {% for quiz in quizzes %}
+                <li>
+                    <div class="quiz-link">
+                    <a href="{% url 'quiz_detail' quiz.id %}">{{ quiz.title }}</a>
+                    <p>{{ quiz.description }}</p>
                     </div>
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+                    {% if is_teacher %}
+                        <div class="teacher-actions">
+                            <a href="{% url 'create_quiz' %}">Create Quiz</a> |
+                            <a href="{% url 'update_quiz' quiz.id %}">Update Quiz</a> |
+                            <a href="{% url 'delete_quiz' quiz.id %}">Delete Quiz</a>
+                        </div>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No quizzes are available right now. Please check back later.</p>
+    {% endif %}
+
+{% endblock %}

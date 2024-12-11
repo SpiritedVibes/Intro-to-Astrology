@@ -26,19 +26,13 @@ class Answer(models.Model):
     def __str__(self):
         return f'Answers for question: {self.question}'
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    birthdate = models.DateField()
-    zodiac_sign = models.CharField(max_length=100)
-    horoscope = models.TextField()
+class QuizResult(models.Model):
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE) 
+    score = models.IntegerField()
+    answers = models.JSONField() 
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user.username}'s Profile"
-    
-class Horoscope(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    date = models.DateField()
-    content = models.TextField()
+        return f"Result for {self.user.username} in {self.quiz.title}"
 
-    def __str__(self):
-        return f"Horoscope for {self.user.username} on {self.date}"

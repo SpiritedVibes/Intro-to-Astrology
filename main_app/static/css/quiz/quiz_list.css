@@ -96,6 +96,31 @@ button:hover {
   background-color: #1d78d1;
 }
 
+/* Styling for the teacher action links */
+.teacher-actions a {
+  color: #4c9aff;  /* Light blue color */
+  font-size: 1.2em;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  margin: 5px;
+  display: inline-block;
+}
+
+.teacher-actions, .quiz-link a:hover {
+  background-color: #1d78d1;  /* Darker blue on hover */
+  color: #fff;  /* White text color on hover */
+}
+
+/* Styling for the teacher actions container */
+.teacher-actions, .quiz-link {
+  margin-top: 10px;
+  text-align: center;  /* Center the action links */
+}
+
+
 @media (max-width: 768px) {
   body {
       font-size: 16px; 
