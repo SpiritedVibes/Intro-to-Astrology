@@ -2,20 +2,20 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
-    background-color: #0B0D17; /* Cosmic Black */
-    color: #F5F7FA; /* Nebula White */
+    background-color: #0B0D17; 
+    color: #F5F7FA;
     line-height: 1.6;
 }
 
 header {
-    background: linear-gradient(135deg, #1C1F3B, #6A4C93); /* Stellar Navy to Nebula Purple */
+    background: linear-gradient(135deg, #1C1F3B, #6A4C93);
     color: #F5F7FA;
     padding: 1rem 2rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-    position: relative; /* Ensure no overlap with content */
+    position: relative;
     z-index: 10;
     width: 100%;
     box-sizing: border-box;
@@ -49,20 +49,20 @@ header nav ul li {
 }
 
 header nav a {
-    color: #37E2D5; /* Aurora Green */
+    color: #37E2D5;
     text-decoration: none;
     font-size: 1.1rem;
     transition: color 0.3s ease;
 }
 
 header nav a:hover {
-    color: #FF6584; /* Supernova Pink */
+    color: #FF6584;
     text-shadow: 0 0 5px #FF6584;
 }
 
 main {
     padding: 2rem;
-    background-color: #1C1F3B; /* Stellar Navy */
+    background-color: #1C1F3B;
     border-radius: 10px;
     margin: 2rem auto;
     max-width: 900px;
@@ -71,24 +71,24 @@ main {
 }
 
 main h2 {
-    color: #FF6584; /* Supernova Pink */
+    color: #FF6584;
     margin-bottom: 1rem;
     text-transform: uppercase;
     font-size: 2rem;
 }
 
 main p {
-    color: #B8C1CC; /* Starry Gray */
+    color: #B8C1CC;
     margin-bottom: 1.5rem;
     font-size: 1.1rem;
 }
 
 footer {
-    background: #0B0D17; /* Cosmic Black */
-    color: #B8C1CC; /* Starry Gray */
+    background: #0B0D17;
+    color: #B8C1CC; 
     text-align: center;
     padding: 1rem 0;
-    border-top: 1px solid #6A4C93; /* Nebula Purple */
+    border-top: 1px solid #6A4C93;
 }
 
 footer p {
@@ -97,12 +97,12 @@ footer p {
 }
 
 footer a {
-    color: #37E2D5; /* Aurora Green */
+    color: #37E2D5;
     text-decoration: none;
 }
 
 footer a:hover {
-    color: #FF6584; /* Supernova Pink */
+    color: #FF6584;
 }
 
 @media (max-width: 768px) {
