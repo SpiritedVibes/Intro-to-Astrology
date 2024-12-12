@@ -108,8 +108,7 @@ button:hover {
   display: inline-block;
 }
 
-.teacher-actions, .quiz-link a:hover {
-  background-color: #1d78d1; 
+.teacher-actions, .quiz-link a:hover { 
   color: #fff; 
 }
 

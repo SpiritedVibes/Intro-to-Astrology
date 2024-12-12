@@ -1,14 +1,9 @@
+{% extends 'base.html' %}
 {% load static %}
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Quiz</title>
+{% block head %}
     <link rel="stylesheet" href="{% static 'css/quiz/update_quiz.css' %}">
-</head>
-<body>
+{% endblock %}
+{% block content %}
     <h1>Update Quiz: {{ quiz.title }}</h1>
 
     <div class="quiz-container">
@@ -26,27 +21,22 @@
                         <h3>Edit Answers</h3>
                         {% for answer in question.answer_set.all %}
                             <div class="answer-form">
-                                <label for="answer_{{ forloop.counter }}_{{ answer.id }}_1">Answer 1:</label>
-                                <input type="text" name="answer_{{ forloop.counter }}_{{ answer.id }}_1" value="{{ answer.answer_1 }}" required>
+                                <label for="answer_{{ question.id }}_{{ answer.id }}">Answer {{ forloop.counter }}:</label>
+                                <input type="text" 
+                                       name="answer_{{ question.id }}_{{ answer.id }}" 
+                                       id="answer_{{ question.id }}_{{ answer.id }}" 
+                                       value="{{ answer.text }}" 
+                                       required>
+        <label for="correct_answer_{{ forloop.parentloop.counter }}_{{ answer.id }}">Correct Answer:</label>
+        <select name="correct_answer_{{ forloop.parentloop.counter }}_{{ answer.id }}" required>
+            <option value="1" {% if answer.correct_answer == 1 %} selected {% endif %}>Answer 1</option>
+            <option value="2" {% if answer.correct_answer == 2 %} selected {% endif %}>Answer 2</option>
+            <option value="3" {% if answer.correct_answer == 3 %} selected {% endif %}>Answer 3</option>
+            <option value="4" {% if answer.correct_answer == 4 %} selected {% endif %}>Answer 4</option>
+        </select>
+    </div>
+{% endfor %}
 
-                                <label for="answer_{{ forloop.counter }}_{{ answer.id }}_2">Answer 2:</label>
-                                <input type="text" name="answer_{{ forloop.counter }}_{{ answer.id }}_2" value="{{ answer.answer_2 }}" required>
-
-                                <label for="answer_{{ forloop.counter }}_{{ answer.id }}_3">Answer 3:</label>
-                                <input type="text" name="answer_{{ forloop.counter }}_{{ answer.id }}_3" value="{{ answer.answer_3 }}" required>
-
-                                <label for="answer_{{ forloop.counter }}_{{ answer.id }}_4">Answer 4:</label>
-                                <input type="text" name="answer_{{ forloop.counter }}_{{ answer.id }}_4" value="{{ answer.answer_4 }}" required>
-
-                                <label for="correct_answer_{{ forloop.counter }}_{{ answer.id }}">Correct Answer:</label>
-                                <select name="correct_answer_{{ forloop.counter }}_{{ answer.id }}" required>
-                                    <option value="1" {% if answer.correct_answer == 1 %} selected {% endif %}>Answer 1</option>
-                                    <option value="2" {% if answer.correct_answer == 2 %} selected {% endif %}>Answer 2</option>
-                                    <option value="3" {% if answer.correct_answer == 3 %} selected {% endif %}>Answer 3</option>
-                                    <option value="4" {% if answer.correct_answer == 4 %} selected {% endif %}>Answer 4</option>
-                                </select>
-                            </div>
-                        {% endfor %}
                     </div>
                 {% endfor %}
             </div>
@@ -56,5 +46,4 @@
     </div>
 
     <a href="{% url 'quiz_list' %}">Back to Quiz List</a>
-</body>
-</html>
+{% endblock %}

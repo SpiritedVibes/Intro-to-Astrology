@@ -11,7 +11,7 @@ from django.urls import reverse_lazy
 from django.views.generic import UpdateView, CreateView, DeleteView, DetailView
 from .models import Quiz, QuizResult, Answer, Question
 from django.http import Http404
-from .forms import QuizForm
+from .forms import QuizForm, QuestionFormSet, AnswerFormSet
 
 
 def is_group_member(user, group_name):
@@ -53,7 +53,7 @@ class QuizView(View):
 
 class QuizDetailView(DetailView):
     model = Quiz
-    template_name = 'quiz_detail.html'
+    template_name = 'quiz/quiz_detail.html'
     context_object_name = 'quiz'
 
 @login_required
@@ -130,31 +130,99 @@ class TeacherRequiredMixin(UserPassesTestMixin):
     def test_func(self):
         return is_group_member(self.request.user, 'Teacher')
 
-class CreateQuizView(TeacherRequiredMixin, CreateView):
-    model = Quiz
-    form_class = QuizForm
-    template_name = 'quiz/create_quiz.html'
-    success_url = reverse_lazy('quiz_list')
+class CreateQuizView(View):
+    def get(self, request):
+        # Get the number of extra forms from the query string, default to 1
+        extra = int(request.GET.get('extra', 1))
+        quiz_form = QuizForm()
+        question_formset = QuestionFormSet(queryset=Question.objects.none())  # Adjust this if needed
+        answer_range = range(1, 5)  # Range for answer fields (1-4)
 
-def form_valid(self, form):
-    print("POST data:", self.request.POST) 
-    return super().form_valid(form)
+        return render(request, 'quiz/create_quiz.html', {
+            'quiz_form': quiz_form,
+            'question_formset': question_formset,
+            'extra': extra,
+            'answer_range': answer_range,
+        })
 
-def form_invalid(self, form):
-    print("Form errors:", form.errors)
-    return super().form_invalid(form)
+    def post(self, request):
+        # Get the number of extra forms from the POST data
+        extra = int(request.POST.get('extra', 1))
+        quiz_form = QuizForm(request.POST)
 
+        if quiz_form.is_valid():
+            # Save the Quiz instance
+            quiz = quiz_form.save()
 
-def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    return context
+            # Create the QuestionFormSet
+            question_formset = QuestionFormSet(request.POST)
+            if question_formset.is_valid():
+                # Loop through each question form in the formset
+                for form in question_formset:
+                    question = form.save(commit=False)  # Do not save yet
+                    question.quiz = quiz  # Set the quiz for the question
+                    question.save()  # Save the question
 
-class UpdateQuizView(TeacherRequiredMixin, UpdateView):
-    model = Quiz
-    fields = ['title', 'description']
+                    # Now save the answers for the question
+                    for i in range(1, 5):
+                        answer_text = request.POST.get(f'answer_{form.prefix}_{i}')
+                        if answer_text:  # Only save if there's answer text
+                            correct_answer = request.POST.get(f'correct_answer_{form.prefix}')
+                            is_correct = (correct_answer == str(i))  # Determine if this is the correct answer
+                            Answer.objects.create(
+                                question=question,
+                                text=answer_text,
+                                is_correct=is_correct
+                            )
+
+                return redirect('quiz_list')  # Redirect to the quiz list page after successful creation
+            else:
+                return render(request, 'quiz/create_quiz.html', {
+                    'quiz_form': quiz_form,
+                    'question_formset': question_formset,
+                    'extra': extra,
+                    'answer_range': range(1, 5),
+                })
+
+class UpdateQuizView(View):
     template_name = 'quiz/update_quiz.html'
-    success_url = reverse_lazy('quiz_list')
 
+    def get(self, request, pk):
+        quiz = get_object_or_404(Quiz, pk=pk)
+
+        quiz_form = QuizForm(instance=quiz)
+        question_formset = QuestionFormSet(instance=quiz)
+        answer_formsets = [AnswerFormSet(instance=question) for question in quiz.questions.all()]
+
+        context = {
+            'quiz_form': quiz_form,
+            'question_formset': question_formset,
+            'answer_formsets': zip(quiz.questions.all(), answer_formsets),
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, pk):
+        quiz = get_object_or_404(Quiz, pk=pk)
+
+        quiz_form = QuizForm(request.POST, instance=quiz)
+        question_formset = QuestionFormSet(request.POST, instance=quiz)
+        answer_formsets = [AnswerFormSet(request.POST, instance=question) for question in quiz.questions.all()]
+
+        if quiz_form.is_valid() and question_formset.is_valid() and all(formset.is_valid() for formset in answer_formsets):
+            quiz_form.save()
+            question_formset.save()
+            for formset in answer_formsets:
+                formset.save()
+
+            return redirect('quiz_list')
+
+        context = {
+            'quiz_form': quiz_form,
+            'question_formset': question_formset,
+            'answer_formsets': zip(quiz.questions.all(), answer_formsets),
+        }
+        return render(request, self.template_name, context)
+    
 class DeleteQuizView(TeacherRequiredMixin, DeleteView):
     model = Quiz
     template_name = 'quiz/delete_quiz.html'

@@ -17,15 +17,12 @@ class Question(models.Model):
 
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    answer_1 = models.CharField(max_length=255)
-    answer_2 = models.CharField(max_length=255)
-    answer_3 = models.CharField(max_length=255)
-    answer_4 = models.CharField(max_length=255)
-    correct_answer = models.IntegerField(choices=[(1, 'Answer 1'), (2, 'Answer 2'), (3, 'Answer 3'), (4, 'Answer 4')])
+    text = models.CharField(max_length=255)
+    is_correct = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'Answers for question: {self.question}'
-
+        return f'Answer for question: {self.question}'
+    
 class QuizResult(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE) 

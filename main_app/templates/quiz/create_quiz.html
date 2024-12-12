@@ -1,109 +1,58 @@
+{% extends 'base.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Quiz</title>
+{% block head %}
     <link rel="stylesheet" href="{% static 'css/quiz/create_quiz.css' %}">
-</head>
-<body>
+{% endblock %}
+
+{% block content %}
     <h1>Create a New Quiz</h1>
 
     <div class="quiz-container">
-        <form method="POST">
+        <form method="POST" id="quiz-form">
             {% csrf_token %}
             {{ quiz_form.as_p }}
 
-            <label for="quiz_title">Quiz Title:</label>
-            <input type="text" name="quiz_title" id="quiz_title" required>
-
-            <label for="quiz_description">Quiz Description:</label>
-            <textarea name="quiz_description" id="quiz_description" required></textarea>
-
             <h2>Questions</h2>
-            <div id="questions-section">
-                <div class="question-form" id="question_1">
-                    <label for="question_1_text">Question 1:</label>
-                    <input type="text" name="question_1_text" id="question_1_text" required>
 
-                    <label for="answer_1_1">Answer 1:</label>
-                    <input type="text" name="answer_1_1" id="answer_1_1" required>
+            <div id="questions-container">
+                {% for form in question_formset %}
+                    <div class="question-form">
+                        <label for="{{ form.question_text.id_for_label }}">Question {{ forloop.counter }}:</label>
+                        {{ form.question_text }}
 
-                    <label for="answer_1_2">Answer 2:</label>
-                    <input type="text" name="answer_1_2" id="answer_1_2" required>
+                        <label for="answer_{{ forloop.counter }}_1">Answer 1:</label>
+                        <input type="text" name="answer_{{ forloop.counter }}_1" required>
 
-                    <label for="answer_1_3">Answer 3:</label>
-                    <input type="text" name="answer_1_3" id="answer_1_3" required>
+                        <label for="answer_{{ forloop.counter }}_2">Answer 2:</label>
+                        <input type="text" name="answer_{{ forloop.counter }}_2" required>
 
-                    <label for="answer_1_4">Answer 4:</label>
-                    <input type="text" name="answer_1_4" id="answer_1_4" required>
+                        <label for="answer_{{ forloop.counter }}_3">Answer 3:</label>
+                        <input type="text" name="answer_{{ forloop.counter }}_3" required>
 
-                    <label for="correct_answer_1">Correct Answer:</label>
-                    <select name="correct_answer_1" id="correct_answer_1" required>
-                        <option value="1">Answer 1</option>
-                        <option value="2">Answer 2</option>
-                        <option value="3">Answer 3</option>
-                        <option value="4">Answer 4</option>
-                    </select>
-                </div>
+                        <label for="answer_{{ forloop.counter }}_4">Answer 4:</label>
+                        <input type="text" name="answer_{{ forloop.counter }}_4" required>
+
+                        <label for="correct_answer_{{ forloop.counter }}">Correct Answer:</label>
+                        <select name="correct_answer_{{ forloop.counter }}" required>
+                            <option value="1">Answer 1</option>
+                            <option value="2">Answer 2</option>
+                            <option value="3">Answer 3</option>
+                            <option value="4">Answer 4</option>
+                        </select>
+                    </div>
+                {% endfor %}
             </div>
 
-            <button type="button" id="add-question">Add Another Question</button>
             <button type="submit">Create Quiz</button>
         </form>
+
+        <form method="GET" action="{% url 'create_quiz' %}">
+            <input type="hidden" name="extra" value="{{ extra|add:1 }}">
+            <button type="submit">Add Another Question</button>
+        </form>
+        
     </div>
 
     <a href="{% url 'quiz_list' %}">Back to Quiz List</a>
-
-    <script>
-        let questionCount = 1;
-
-        document.getElementById('add-question').addEventListener('click', function() {
-            questionCount++;
-
-            const newQuestion = document.createElement('div');
-            newQuestion.classList.add('question-form');
-            newQuestion.id = `question_${questionCount}`;
-
-            newQuestion.innerHTML = `
-                <label for="question_${questionCount}_text">Question ${questionCount}:</label>
-                <input type="text" name="question_${questionCount}_text" id="question_${questionCount}_text" required>
-
-                <label for="answer_${questionCount}_1">Answer 1:</label>
-                <input type="text" name="answer_${questionCount}_1" id="answer_${questionCount}_1" required>
-
-                <label for="answer_${questionCount}_2">Answer 2:</label>
-                <input type="text" name="answer_${questionCount}_2" id="answer_${questionCount}_2" required>
-
-                <label for="answer_${questionCount}_3">Answer 3:</label>
-                <input type="text" name="answer_${questionCount}_3" id="answer_${questionCount}_3" required>
-
-                <label for="answer_${questionCount}_4">Answer 4:</label>
-                <input type="text" name="answer_${questionCount}_4" id="answer_${questionCount}_4" required>
-
-                <label for="correct_answer_${questionCount}">Correct Answer:</label>
-                <select name="correct_answer_${questionCount}" id="correct_answer_${questionCount}" required>
-                    <option value="1">Answer 1</option>
-                    <option value="2">Answer 2</option>
-                    <option value="3">Answer 3</option>
-                    <option value="4">Answer 4</option>
-                </select>
-            `;
-
-            document.getElementById('questions-section').appendChild(newQuestion);
-
-            // Update hidden input to track number of questions
-            let questionCountInput = document.querySelector('input[name="question_count"]');
-            if (!questionCountInput) {
-                questionCountInput = document.createElement('input');
-                questionCountInput.type = 'hidden';
-                questionCountInput.name = 'question_count';
-                document.querySelector('form').appendChild(questionCountInput);
-            }
-            questionCountInput.value = questionCount;
-        });
-    </script>
-</body>
-</html>
+{% endblock %}
