@@ -187,16 +187,22 @@ class CreateQuizView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
+        print("Context before adding formsets:", context)
+
         if self.object: 
+            print("Quiz object exists:", self.object)
             question_formset = QuestionFormSet(instance=self.object)
         else:
+            print("No quiz object yet")
             question_formset = QuestionFormSet()
+
+            print("Question Formset:", question_formset)
         
         context['quiz_form'] = self.form_class()
         context['question_formset'] = question_formset
         context['answer_formsets'] = [AnswerFormSet(queryset=Answer.objects.none(), prefix=f'answers_{i}') for i in range(len(question_formset))]
 
+        print("Final context:", context)
         return context
 
 class UpdateQuizView(UpdateView):
