@@ -9,34 +9,36 @@
     <div class="quiz-container">
         <form method="POST">
             {% csrf_token %}
-            {{ form.as_p }}
+            {{ quiz_form.as_p }}
 
             <h2>Edit Questions</h2>
             <div id="questions-section">
-                {% for question in quiz.questions.all %}
+                {% for question, answer_formset in answer_formsets %}
                     <div class="question-form">
-                        <label for="question_{{ forloop.counter }}">Question {{ forloop.counter }}:</label>
-                        <input type="text" name="question_{{ question.id }}" id="question_{{ forloop.counter }}" value="{{ question.question_text }}" required>
+                       
+                        <label for="question_{{ question.id }}">Question {{ forloop.counter }}:</label>
+                        <input type="text" name="question_{{ question.id }}" id="question_{{ question.id }}" value="{{ question.question_text }}" required>
 
                         <h3>Edit Answers</h3>
-                        {% for answer in question.answer_set.all %}
-                            <div class="answer-form">
-                                <label for="answer_{{ question.id }}_{{ answer.id }}">Answer {{ forloop.counter }}:</label>
-                                <input type="text" 
-                                       name="answer_{{ question.id }}_{{ answer.id }}" 
-                                       id="answer_{{ question.id }}_{{ answer.id }}" 
-                                       value="{{ answer.text }}" 
-                                       required>
-        <label for="correct_answer_{{ forloop.parentloop.counter }}_{{ answer.id }}">Correct Answer:</label>
-        <select name="correct_answer_{{ forloop.parentloop.counter }}_{{ answer.id }}" required>
-            <option value="1" {% if answer.correct_answer == 1 %} selected {% endif %}>Answer 1</option>
-            <option value="2" {% if answer.correct_answer == 2 %} selected {% endif %}>Answer 2</option>
-            <option value="3" {% if answer.correct_answer == 3 %} selected {% endif %}>Answer 3</option>
-            <option value="4" {% if answer.correct_answer == 4 %} selected {% endif %}>Answer 4</option>
-        </select>
-    </div>
-{% endfor %}
+                        <div id="answers-section">
+                            {% for answer_form in answer_formset %}
+                                <div class="answer-form">
+                                   
+                                    <label for="answer_{{ question.id }}_{{ answer_form.instance.id }}">Answer {{ forloop.counter }}:</label>
+                                    {{ answer_form.text }}
+                                </div>
+                            {% endfor %}
+                        </div>
 
+                        
+                        <h4>Select Correct Answer</h4>
+                        <select name="correct_answer_{{ question.id }}" required>
+                            {% for answer_form in answer_formset %}
+                                <option value="{{ answer_form.instance.id }}" {% if answer_form.instance.is_correct %} selected {% endif %}>
+                                    {{ answer_form.instance.text }}
+                                </option>
+                            {% endfor %}
+                        </select>
                     </div>
                 {% endfor %}
             </div>

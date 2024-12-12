@@ -132,58 +132,52 @@ class TeacherRequiredMixin(UserPassesTestMixin):
 
 class CreateQuizView(View):
     def get(self, request):
-        # Get the number of extra forms from the query string, default to 1
         extra = int(request.GET.get('extra', 1))
         quiz_form = QuizForm()
-        question_formset = QuestionFormSet(queryset=Question.objects.none())  # Adjust this if needed
-        answer_range = range(1, 5)  # Range for answer fields (1-4)
+
+       
+        question_formset = QuestionFormSet(queryset=Question.objects.none(), prefix='question')
+        answer_formsets = [AnswerFormSet(queryset=Answer.objects.none(), prefix=f'answer-{i+1}') for i in range(extra)]
 
         return render(request, 'quiz/create_quiz.html', {
             'quiz_form': quiz_form,
             'question_formset': question_formset,
+            'answer_formsets': answer_formsets,
             'extra': extra,
-            'answer_range': answer_range,
         })
 
     def post(self, request):
-        # Get the number of extra forms from the POST data
         extra = int(request.POST.get('extra', 1))
         quiz_form = QuizForm(request.POST)
 
+        answer_formsets = [AnswerFormSet(queryset=Answer.objects.none(), prefix=f'answer-{i+1}') for i in range(extra)]
+
         if quiz_form.is_valid():
-            # Save the Quiz instance
             quiz = quiz_form.save()
 
-            # Create the QuestionFormSet
-            question_formset = QuestionFormSet(request.POST)
+            question_formset = QuestionFormSet(request.POST, prefix='question')
             if question_formset.is_valid():
-                # Loop through each question form in the formset
+                questions = []
                 for form in question_formset:
-                    question = form.save(commit=False)  # Do not save yet
-                    question.quiz = quiz  # Set the quiz for the question
-                    question.save()  # Save the question
+                    question = form.save(commit=False)
+                    question.quiz = quiz
+                    question.save()
+                    questions.append(question)
 
-                    # Now save the answers for the question
+                  
                     for i in range(1, 5):
                         answer_text = request.POST.get(f'answer_{form.prefix}_{i}')
-                        if answer_text:  # Only save if there's answer text
+                        if answer_text:
                             correct_answer = request.POST.get(f'correct_answer_{form.prefix}')
-                            is_correct = (correct_answer == str(i))  # Determine if this is the correct answer
+                            is_correct = (correct_answer == str(i))
                             Answer.objects.create(
                                 question=question,
                                 text=answer_text,
                                 is_correct=is_correct
                             )
 
-                return redirect('quiz_list')  # Redirect to the quiz list page after successful creation
-            else:
-                return render(request, 'quiz/create_quiz.html', {
-                    'quiz_form': quiz_form,
-                    'question_formset': question_formset,
-                    'extra': extra,
-                    'answer_range': range(1, 5),
-                })
-
+                return redirect('quiz_list')  
+         
 class UpdateQuizView(View):
     template_name = 'quiz/update_quiz.html'
 
@@ -192,13 +186,22 @@ class UpdateQuizView(View):
 
         quiz_form = QuizForm(instance=quiz)
         question_formset = QuestionFormSet(instance=quiz)
-        answer_formsets = [AnswerFormSet(instance=question) for question in quiz.questions.all()]
+
+        answer_formsets = [
+            AnswerFormSet(instance=question) for question in quiz.questions.all()
+        ]
 
         context = {
             'quiz_form': quiz_form,
             'question_formset': question_formset,
             'answer_formsets': zip(quiz.questions.all(), answer_formsets),
         }
+
+        print(f"Quiz: {quiz.title}")
+        print(f"Questions: {quiz.questions.all()}")
+        print(f"Question Formset: {question_formset}")
+        print(f"Answer Formsets: {answer_formsets}")
+
         return render(request, self.template_name, context)
 
     def post(self, request, pk):
@@ -206,15 +209,32 @@ class UpdateQuizView(View):
 
         quiz_form = QuizForm(request.POST, instance=quiz)
         question_formset = QuestionFormSet(request.POST, instance=quiz)
-        answer_formsets = [AnswerFormSet(request.POST, instance=question) for question in quiz.questions.all()]
 
+        answer_formsets = [
+            AnswerFormSet(request.POST, instance=question) for question in quiz.questions.all()
+        ]
+
+        
         if quiz_form.is_valid() and question_formset.is_valid() and all(formset.is_valid() for formset in answer_formsets):
             quiz_form.save()
             question_formset.save()
-            for formset in answer_formsets:
-                formset.save()
 
-            return redirect('quiz_list')
+            for question, formset in zip(quiz.questions.all(), answer_formsets):
+                formset.save()  
+
+            
+                correct_answer_id = request.POST.get(f'correct_answer_{question.id}')
+                if correct_answer_id:
+                    correct_answer = question.answer_set.get(id=correct_answer_id)
+                    correct_answer.is_correct = True
+                    correct_answer.save()
+
+                   
+                    for answer in question.answer_set.exclude(id=correct_answer.id):
+                        answer.is_correct = False
+                        answer.save()
+
+            return redirect('quiz_list') 
 
         context = {
             'quiz_form': quiz_form,
@@ -222,7 +242,8 @@ class UpdateQuizView(View):
             'answer_formsets': zip(quiz.questions.all(), answer_formsets),
         }
         return render(request, self.template_name, context)
-    
+
+
 class DeleteQuizView(TeacherRequiredMixin, DeleteView):
     model = Quiz
     template_name = 'quiz/delete_quiz.html'
