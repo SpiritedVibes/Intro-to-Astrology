@@ -130,118 +130,96 @@ class TeacherRequiredMixin(UserPassesTestMixin):
     def test_func(self):
         return is_group_member(self.request.user, 'Teacher')
 
-class CreateQuizView(View):
-    def get(self, request):
-        extra = int(request.GET.get('extra', 1))
-        quiz_form = QuizForm()
+# class CreateQuizView(View):
+#     def get(self, request):
+#         extra = int(request.GET.get('extra', 1))
+#         quiz_form = QuizForm()
 
        
-        question_formset = QuestionFormSet(queryset=Question.objects.none(), prefix='question')
-        answer_formsets = [AnswerFormSet(queryset=Answer.objects.none(), prefix=f'answer-{i+1}') for i in range(extra)]
+#         question_formset = QuestionFormSet(queryset=Question.objects.none(), prefix='question')
+#         answer_formsets = [AnswerFormSet(queryset=Answer.objects.none(), prefix=f'answer-{i+1}') for i in range(extra)]
 
-        return render(request, 'quiz/create_quiz.html', {
-            'quiz_form': quiz_form,
-            'question_formset': question_formset,
-            'answer_formsets': answer_formsets,
-            'extra': extra,
-        })
+#         return render(request, 'quiz/create_quiz.html', {
+#             'quiz_form': quiz_form,
+#             'question_formset': question_formset,
+#             'answer_formsets': answer_formsets,
+#             'extra': extra,
+#         })
 
-    def post(self, request):
-        extra = int(request.POST.get('extra', 1))
-        quiz_form = QuizForm(request.POST)
+#     def post(self, request):
+#         extra = int(request.POST.get('extra', 1))
+#         quiz_form = QuizForm(request.POST)
 
-        answer_formsets = [AnswerFormSet(queryset=Answer.objects.none(), prefix=f'answer-{i+1}') for i in range(extra)]
+#         answer_formsets = [AnswerFormSet(queryset=Answer.objects.none(), prefix=f'answer-{i+1}') for i in range(extra)]
 
-        if quiz_form.is_valid():
-            quiz = quiz_form.save()
+#         if quiz_form.is_valid():
+#             quiz = quiz_form.save()
 
-            question_formset = QuestionFormSet(request.POST, prefix='question')
-            if question_formset.is_valid():
-                questions = []
-                for form in question_formset:
-                    question = form.save(commit=False)
-                    question.quiz = quiz
-                    question.save()
-                    questions.append(question)
+#             question_formset = QuestionFormSet(request.POST, prefix='question')
+#             if question_formset.is_valid():
+#                 questions = []
+#                 for form in question_formset:
+#                     question = form.save(commit=False)
+#                     question.quiz = quiz
+#                     question.save()
+#                     questions.append(question)
 
                   
-                    for i in range(1, 5):
-                        answer_text = request.POST.get(f'answer_{form.prefix}_{i}')
-                        if answer_text:
-                            correct_answer = request.POST.get(f'correct_answer_{form.prefix}')
-                            is_correct = (correct_answer == str(i))
-                            Answer.objects.create(
-                                question=question,
-                                text=answer_text,
-                                is_correct=is_correct
-                            )
+#                     for i in range(1, 5):
+#                         answer_text = request.POST.get(f'answer_{form.prefix}_{i}')
+#                         if answer_text:
+#                             correct_answer = request.POST.get(f'correct_answer_{form.prefix}')
+#                             is_correct = (correct_answer == str(i))
+#                             Answer.objects.create(
+#                                 question=question,
+#                                 text=answer_text,
+#                                 is_correct=is_correct
+#                             )
 
-                return redirect('quiz_list')  
+#                 return redirect('quiz_list')  
          
-class UpdateQuizView(View):
+
+class CreateQuizView(CreateView):
+    model = Quiz
+    form_class = QuizForm
+    template_name = 'quiz/create_quiz.html'
+    success_url = reverse_lazy('quiz_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        if self.object: 
+            question_formset = QuestionFormSet(instance=self.object)
+        else:
+            question_formset = QuestionFormSet()
+        
+        context['quiz_form'] = self.form_class()
+        context['question_formset'] = question_formset
+        context['answer_formsets'] = [AnswerFormSet(queryset=Answer.objects.none(), prefix=f'answers_{i}') for i in range(len(question_formset))]
+
+        return context
+
+class UpdateQuizView(UpdateView):
+    model = Quiz
+    form_class = QuizForm
     template_name = 'quiz/update_quiz.html'
+    success_url = reverse_lazy('quiz_list')
 
-    def get(self, request, pk):
-        quiz = get_object_or_404(Quiz, pk=pk)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        quiz = self.object
 
-        quiz_form = QuizForm(instance=quiz)
         question_formset = QuestionFormSet(instance=quiz)
-
+        
         answer_formsets = [
             AnswerFormSet(instance=question) for question in quiz.questions.all()
         ]
-
-        context = {
-            'quiz_form': quiz_form,
-            'question_formset': question_formset,
-            'answer_formsets': zip(quiz.questions.all(), answer_formsets),
-        }
-
-        print(f"Quiz: {quiz.title}")
-        print(f"Questions: {quiz.questions.all()}")
-        print(f"Question Formset: {question_formset}")
-        print(f"Answer Formsets: {answer_formsets}")
-
-        return render(request, self.template_name, context)
-
-    def post(self, request, pk):
-        quiz = get_object_or_404(Quiz, pk=pk)
-
-        quiz_form = QuizForm(request.POST, instance=quiz)
-        question_formset = QuestionFormSet(request.POST, instance=quiz)
-
-        answer_formsets = [
-            AnswerFormSet(request.POST, instance=question) for question in quiz.questions.all()
-        ]
-
         
-        if quiz_form.is_valid() and question_formset.is_valid() and all(formset.is_valid() for formset in answer_formsets):
-            quiz_form.save()
-            question_formset.save()
+        context['quiz_form'] = self.form_class(instance=quiz)
+        context['question_formset'] = question_formset
+        context['answer_formsets'] = zip(quiz.questions.all(), answer_formsets)
 
-            for question, formset in zip(quiz.questions.all(), answer_formsets):
-                formset.save()  
-
-            
-                correct_answer_id = request.POST.get(f'correct_answer_{question.id}')
-                if correct_answer_id:
-                    correct_answer = question.answer_set.get(id=correct_answer_id)
-                    correct_answer.is_correct = True
-                    correct_answer.save()
-
-                   
-                    for answer in question.answer_set.exclude(id=correct_answer.id):
-                        answer.is_correct = False
-                        answer.save()
-
-            return redirect('quiz_list') 
-
-        context = {
-            'quiz_form': quiz_form,
-            'question_formset': question_formset,
-            'answer_formsets': zip(quiz.questions.all(), answer_formsets),
-        }
-        return render(request, self.template_name, context)
+        return context
 
 
 class DeleteQuizView(TeacherRequiredMixin, DeleteView):
