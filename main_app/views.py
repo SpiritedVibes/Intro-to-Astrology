@@ -8,10 +8,9 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.urls import reverse_lazy
-from django.views.generic import UpdateView, CreateView, DeleteView, DetailView
-from .models import Quiz, QuizResult, Answer, Question
+from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
+from .models import Quiz, QuizResult
 from django.http import Http404
-from .forms import QuizForm, QuestionFormSet, AnswerFormSet
 
 
 def is_group_member(user, group_name):
@@ -72,7 +71,7 @@ def quiz_result_view(request, quiz_id):
             selected_answer_id = request.POST.get(f'question_{question.id}')
             
             if selected_answer_id:
-                selected_answer = Answer.objects.get(id=selected_answer_id)
+                selected_answer = Quiz.objects.get(id=selected_answer_id)
                 user_answers.append({
                     'question': question,
                     'selected_answer': selected_answer,
@@ -181,52 +180,40 @@ class TeacherRequiredMixin(UserPassesTestMixin):
 
 class CreateQuizView(CreateView):
     model = Quiz
-    form_class = QuizForm
-    template_name = 'quiz/create_quiz.html'
-    success_url = reverse_lazy('quiz_list')
+    fields = ['title', 'description', 'question_text', 'answer_1', 'answer_2', 'answer_3', 'answer_4', 'is_correct', 'user']
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        print("Context before adding formsets:", context)
+    def form_valid(self, form):
+        # Assign the logged in user (self.request.user)
+        form.instance.user = self.request.user
 
-        if self.object: 
-            print("Quiz object exists:", self.object)
-            question_formset = QuestionFormSet(instance=self.object)
-        else:
-            print("No quiz object yet")
-            question_formset = QuestionFormSet()
-
-            print("Question Formset:", question_formset)
+        return super().form_valid(form) 
         
-        context['quiz_form'] = self.form_class()
-        context['question_formset'] = question_formset
-        context['answer_formsets'] = [AnswerFormSet(queryset=Answer.objects.none(), prefix=f'answers_{i}') for i in range(len(question_formset))]
-
-        print("Final context:", context)
-        return context
-
-class UpdateQuizView(UpdateView):
+class UpdateQuizView(TeacherRequiredMixin, UpdateView):
     model = Quiz
-    form_class = QuizForm
-    template_name = 'quiz/update_quiz.html'
-    success_url = reverse_lazy('quiz_list')
+    fields = ['title', 'description', 'question_text', 'answer_1', 'answer_2', 'answer_3', 'answer_4', 'is_correct', 'user']
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        quiz = self.object
+# class UpdateQuizView(UpdateView):
+#     model = Quiz
+#     form_class = QuizForm
+#     template_name = 'quiz/update_quiz.html'
+#     success_url = reverse_lazy('quiz_list')
 
-        question_formset = QuestionFormSet(instance=quiz)
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         quiz = self.object
+
+#         question_formset = QuestionFormSet(instance=quiz)
         
        
-        answer_formsets = [
-            AnswerFormSet(instance=question) for question in quiz.questions.all()
-        ]
+#         answer_formsets = [
+#             AnswerFormSet(instance=question) for question in quiz.questions.all()
+#         ]
         
-        context['quiz_form'] = self.form_class(instance=quiz)
-        context['question_formset'] = question_formset
-        context['answer_formsets'] = zip(quiz.questions.all(), answer_formsets)
+#         context['quiz_form'] = self.form_class(instance=quiz)
+#         context['question_formset'] = question_formset
+#         context['answer_formsets'] = zip(quiz.questions.all(), answer_formsets)
 
-        return context
+#         return context
 
 
 class DeleteQuizView(TeacherRequiredMixin, DeleteView):

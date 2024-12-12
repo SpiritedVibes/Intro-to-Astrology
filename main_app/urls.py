@@ -1,6 +1,6 @@
 from django.urls import path, include
 from . import views
-from .views import QuizDetailView, CreateQuizView, UpdateQuizView, DeleteQuizView
+from .views import QuizDetailView, CreateQuizView, DeleteQuizView, UpdateQuizView
 
 urlpatterns = [
     path('', views.Home.as_view(), name='home'),
