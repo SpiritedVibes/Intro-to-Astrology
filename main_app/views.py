@@ -105,50 +105,55 @@ class CreateQuizView(TeacherRequiredMixin, CreateView):
     template_name = 'main_app/quiz_form.html'
 
     def form_valid(self, form):
-        # Save the quiz instance
         form.instance.user = self.request.user
-        
-        # Check if the "Add Another Question" button was clicked
-        if 'add_question' in self.request.POST:
-            # If the "Add Another Question" button was clicked, we just return without saving
-            return self.render_to_response(self.get_context_data(form=form, add_question=True))
+        quiz = form.save()  # Save the quiz instance
 
-        # If the "Save Quiz" button was clicked, save the quiz and process the questions
-        response = super().form_valid(form)
+        # Process questions from the form
+        question_count = int(self.request.POST.get('question_count', 1))
+        for i in range(1, question_count + 1):
+            question_text = self.request.POST.get(f'question_text_{i}')
+            answers = [
+                self.request.POST.get(f'answer_{j}_{i}') for j in range(1, 5)
+            ]
+            correct_answer = self.request.POST.get(f'correct_answer_{i}')
 
-        # Process the questions after the form is valid (you can save the questions here if needed)
-        question_data = self.request.POST.getlist('question_text')
-        answers_1 = self.request.POST.getlist('answer_1')
-        answers_2 = self.request.POST.getlist('answer_2')
-        answers_3 = self.request.POST.getlist('answer_3')
-        answers_4 = self.request.POST.getlist('answer_4')
-        correct_answers = self.request.POST.getlist('correct_answer')
+            if question_text and all(answers) and correct_answer:
+                Question.objects.create(
+                    quiz=quiz,
+                    question_text=question_text,
+                    answer_1=answers[0],
+                    answer_2=answers[1],
+                    answer_3=answers[2],
+                    answer_4=answers[3],
+                    correct_answer=correct_answer,
+                )
 
-        for i in range(len(question_data)):
-            Question.objects.create(
-                quiz=form.instance,
-                question_text=question_data[i],
-                answer_1=answers_1[i],
-                answer_2=answers_2[i],
-                answer_3=answers_3[i],
-                answer_4=answers_4[i],
-                correct_answer=correct_answers[i]
-            )
-
-        return response
+        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # Check if we are adding a new question
-        if 'add_question' in self.request.POST:
-            # If adding a new question, pass the current question data
-            question_data = self.request.POST.getlist('question_text')
-            context['question_data'] = question_data
-        else:
-            context['question_data'] = []  # Empty list for creating new questions
+        # Determine how many questions to render
+        question_count = int(self.request.POST.get('question_count', 1))
+        if self.request.POST.get('add_question') == 'True':
+            question_count += 1
 
+        # Populate the existing or empty question data
+        context['question_data'] = [
+            {
+                'question_text': self.request.POST.get(f'question_text_{i}', ''),
+                'answer_1': self.request.POST.get(f'answer_1_{i}', ''),
+                'answer_2': self.request.POST.get(f'answer_2_{i}', ''),
+                'answer_3': self.request.POST.get(f'answer_3_{i}', ''),
+                'answer_4': self.request.POST.get(f'answer_4_{i}', ''),
+                'correct_answer': self.request.POST.get(f'correct_answer_{i}', ''),
+            }
+            for i in range(1, question_count + 1)
+        ]
+        context['question_count'] = question_count
         return context
+
+
 
 class UpdateQuizView(TeacherRequiredMixin, UpdateView):
     model = Quiz
@@ -160,7 +165,6 @@ class UpdateQuizView(TeacherRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Fetching questions related to the quiz
         context['question_data'] = self.object.questions.all()
         return context
 

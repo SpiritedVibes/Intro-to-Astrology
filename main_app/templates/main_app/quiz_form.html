@@ -1,10 +1,12 @@
+{%load static %}
+<link rel="stylesheet" href="{% static 'css/quiz/quiz_form.css' %}">
+
 <form method="post">
   {% csrf_token %}
   {{ form.as_p }}
 
   <div id="question-section">
       {% if question_data %}
-          <!-- Loop through the existing question data for updating -->
           {% for question in question_data %}
               <div class="question">
                   <label>Question {{ forloop.counter }}:</label>
@@ -32,7 +34,6 @@
               </div>
           {% endfor %}
       {% else %}
-          <!-- Empty fields for creating a new quiz -->
           <div class="question">
               <label>Question 1:</label>
               <input type="text" name="question_text_1" required>

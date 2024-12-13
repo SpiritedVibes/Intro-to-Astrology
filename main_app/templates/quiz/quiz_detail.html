@@ -20,20 +20,28 @@
                     <p>{{ question.question_text }}</p>
                     <ul class="answers">
                         <li>
-                            <input type="radio" name="question_{{ question.id }}" value="answer_1" id="answer_1_{{ question.id }}">
-                            <label for="answer_1_{{ question.id }}">{{ question.answer_1 }}</label>
+                            <label for="answer_1_{{ question.id }}">
+                                <input type="radio" name="question_{{ question.id }}" value="answer_1" id="answer_1_{{ question.id }}">
+                                {{ question.answer_1 }}
+                            </label>
                         </li>
                         <li>
-                            <input type="radio" name="question_{{ question.id }}" value="answer_2" id="answer_2_{{ question.id }}">
-                            <label for="answer_2_{{ question.id }}">{{ question.answer_2 }}</label>
+                            <label for="answer_2_{{ question.id }}">
+                                <input type="radio" name="question_{{ question.id }}" value="answer_2" id="answer_2_{{ question.id }}">
+                                {{ question.answer_2 }}
+                            </label>
                         </li>
                         <li>
-                            <input type="radio" name="question_{{ question.id }}" value="answer_3" id="answer_3_{{ question.id }}">
-                            <label for="answer_3_{{ question.id }}">{{ question.answer_3 }}</label>
+                            <label for="answer_3_{{ question.id }}">
+                                <input type="radio" name="question_{{ question.id }}" value="answer_3" id="answer_3_{{ question.id }}">
+                                {{ question.answer_3 }}
+                            </label>
                         </li>
                         <li>
-                            <input type="radio" name="question_{{ question.id }}" value="answer_4" id="answer_4_{{ question.id }}">
-                            <label for="answer_4_{{ question.id }}">{{ question.answer_4 }}</label>
+                            <label for="answer_4_{{ question.id }}">
+                                <input type="radio" name="question_{{ question.id }}" value="answer_4" id="answer_4_{{ question.id }}">
+                                {{ question.answer_4 }}
+                            </label>
                         </li>
                     </ul>
                 </div>
