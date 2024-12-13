@@ -1,26 +1,65 @@
-{% extends 'base.html' %} 
-{% load static %} 
-{% block head %}
-<link rel="stylesheet" href="{% static 'css/form.css' %}" />
-{% endblock %} 
-{% block content %}
-
-<div class="page-header">
-    <!-- Check if a cat object exists to determine if we're editing -->
-    {% if quiz %}
-      <h1>Edit {{ quiz.title }}</h1>
-    {% else %}
-      <h1>Add a Quiz</h1>
-    {% endif %}
-  </div>
-  
-
-<form action="" method="post" class="form-container">
+<form method="post">
   {% csrf_token %}
-  <table>
-    {{ form.as_table }}
-  </table>
-  <button type="submit" class="btn submit">Submit!</button>
-</form>
+  {{ form.as_p }}
 
-{% endblock %}
+  <div id="question-section">
+      {% if question_data %}
+          <!-- Loop through the existing question data for updating -->
+          {% for question in question_data %}
+              <div class="question">
+                  <label>Question {{ forloop.counter }}:</label>
+                  <input type="text" name="question_text_{{ forloop.counter }}" value="{{ question.question_text }}" required>
+                  
+                  <label>Answer 1:</label>
+                  <input type="text" name="answer_1_{{ forloop.counter }}" value="{{ question.answer_1 }}" required>
+                  
+                  <label>Answer 2:</label>
+                  <input type="text" name="answer_2_{{ forloop.counter }}" value="{{ question.answer_2 }}" required>
+                  
+                  <label>Answer 3:</label>
+                  <input type="text" name="answer_3_{{ forloop.counter }}" value="{{ question.answer_3 }}" required>
+                  
+                  <label>Answer 4:</label>
+                  <input type="text" name="answer_4_{{ forloop.counter }}" value="{{ question.answer_4 }}" required>
+
+                  <label>Correct Answer:</label>
+                  <select name="correct_answer_{{ forloop.counter }}">
+                      <option value="answer_1" {% if question.correct_answer == 'answer_1' %}selected{% endif %}>Answer 1</option>
+                      <option value="answer_2" {% if question.correct_answer == 'answer_2' %}selected{% endif %}>Answer 2</option>
+                      <option value="answer_3" {% if question.correct_answer == 'answer_3' %}selected{% endif %}>Answer 3</option>
+                      <option value="answer_4" {% if question.correct_answer == 'answer_4' %}selected{% endif %}>Answer 4</option>
+                  </select>
+              </div>
+          {% endfor %}
+      {% else %}
+          <!-- Empty fields for creating a new quiz -->
+          <div class="question">
+              <label>Question 1:</label>
+              <input type="text" name="question_text_1" required>
+              
+              <label>Answer 1:</label>
+              <input type="text" name="answer_1_1" required>
+              
+              <label>Answer 2:</label>
+              <input type="text" name="answer_2_1" required>
+              
+              <label>Answer 3:</label>
+              <input type="text" name="answer_3_1" required>
+              
+              <label>Answer 4:</label>
+              <input type="text" name="answer_4_1" required>
+
+              <label>Correct Answer:</label>
+              <select name="correct_answer_1">
+                  <option value="answer_1">Answer 1</option>
+                  <option value="answer_2">Answer 2</option>
+                  <option value="answer_3">Answer 3</option>
+                  <option value="answer_4">Answer 4</option>
+              </select>
+          </div>
+      {% endif %}
+  </div>
+
+  <button type="submit">Save Quiz</button>
+  <button type="submit" name="add_question" value="True">Add Another Question</button>
+</form>

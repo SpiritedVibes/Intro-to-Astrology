@@ -1,0 +1,111 @@
+body {
+    background-color: #0b0d17;
+    color: #f5f7fa;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    background: url('https://source.unsplash.com/1600x900/?galaxy') no-repeat center center fixed;
+    background-size: cover;
+  }
+
+  .form-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 204, 255, 0.8);
+    box-sizing: border-box;
+    backdrop-filter: blur(5px);
+  }
+  
+  h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #00ccff;
+    text-shadow: 0 0 20px rgba(0, 204, 255, 0.8);
+    margin-bottom: 20px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  label {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #f5f7fa;
+  }
+  
+  input, textarea, select {
+    padding: 10px;
+    font-size: 1.1rem;
+    color: #f5f7fa;
+    background-color: #1a1a2e;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 204, 255, 0.5);
+    transition: all 0.3s ease;
+  }
+  
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    box-shadow: 0 0 15px rgba(0, 204, 255, 1);
+    background-color: #2a2a48;
+  }
+  
+  button {
+    background-color: #37e2d5;
+    color: #0b0d17;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    align-self: center;
+  }
+  
+  button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(55, 226, 213, 0.8);
+    background-color: #ff6584;
+  }
+  
+  button:focus {
+    outline: none;
+  }
+  
+  a {
+    color: #37e2d5;
+    text-decoration: none;
+    font-size: 1rem;
+    text-align: center;
+    display: block;
+    margin-top: 20px;
+    transition: color 0.3s ease;
+  }
+  
+  a:hover {
+    color: #ff6584;
+    text-shadow: 0 0 5px #ff6584;
+  }
+  
+  @media (max-width: 768px) {
+    .form-container {
+      padding: 20px;
+    }
+  
+    h1 {
+      font-size: 2rem;
+    }
+  
+    label, input, textarea, select, button {
+      font-size: 1rem;
+    }
+  }
+  
