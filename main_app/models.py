@@ -48,3 +48,20 @@ class QuizResult(models.Model):
 
     def __str__(self):
         return f"Result for {self.user.username} in {self.quiz.title}"
+    
+class PlanetInfo(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    image_url = models.URLField()
+
+    def __str__(self):
+        return self.name
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    astrology_sign = models.CharField(max_length=50, blank=True, null=True)
+    daily_horoscope = models.TextField(blank=True, null=True)
+    birth_date = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Profile for {self.user.username}"

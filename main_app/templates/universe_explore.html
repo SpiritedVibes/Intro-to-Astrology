@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/universe_explore.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="universe-container">
+    <header>
+        <h1>Welcome to the Universe Exploration!</h1>
+        <p>Embark on an interactive journey through the cosmos and learn about the wonders of the universe.</p>
+    </header>
+
+    <section class="intro">
+        <h2>What is the Universe?</h2>
+        <p>The universe is everything we know: stars, planets, galaxies, and all of space-time itself. It's vast, mysterious, and constantly evolving!</p>
+    </section>
+
+    <section class="educational-content">
+        <h2>The Universe: Key Topics</h2>
+
+        <div class="info">
+            <h3>1. What is the largest planet in our solar system?</h3>
+            <p><strong>Answer:</strong> Jupiter - Jupiter is the largest planet in our solar system, with a diameter of around 139,820 km.</p>
+        </div>
+
+        <div class="info">
+            <h3>2. What is the name of the closest star to Earth?</h3>
+            <p><strong>Answer:</strong> The Sun - The Sun is the closest star to Earth and provides the light and heat necessary for life on Earth.</p>
+        </div>
+
+        <div class="info">
+            <h3>3. Which galaxy is closest to the Milky Way?</h3>
+            <p><strong>Answer:</strong> Andromeda - The Andromeda Galaxy is the closest large galaxy to the Milky Way and is on a collision course with our galaxy.</p>
+        </div>
+
+        <div class="info">
+            <h3>4. What is a black hole?</h3>
+            <p><strong>Answer:</strong> A black hole is a region of space where gravity is so strong that nothing, not even light, can escape. Black holes can form when massive stars collapse under their own gravity.</p>
+        </div>
+
+        <div class="info">
+            <h3>5. What is the primary element that fuels the Sun's energy?</h3>
+            <p><strong>Answer:</strong> Hydrogen - The Sun's energy is produced by nuclear fusion, where hydrogen atoms fuse to form helium, releasing large amounts of energy.</p>
+        </div>
+
+        <div class="info">
+            <h3>6. Which planet is known as the "Red Planet"?</h3>
+            <p><strong>Answer:</strong> Mars - Mars is often called the "Red Planet" due to its reddish appearance caused by iron oxide (rust) on its surface.</p>
+        </div>
+
+        <div class="info">
+            <h3>7. How many moons does the planet Jupiter have?</h3>
+            <p><strong>Answer:</strong> 79 - Jupiter has 79 known moons, with some of the largest being Io, Europa, Ganymede, and Callisto.</p>
+        </div>
+
+        <div class="info">
+            <h3>8. Which planet has the longest day in the solar system?</h3>
+            <p><strong>Answer:</strong> Venus - Venus has the longest day of any planet in the solar system, taking 243 Earth days to complete one rotation.</p>
+        </div>
+
+        <div class="info">
+            <h3>9. What is the name of the first artificial satellite to orbit the Earth?</h3>
+            <p><strong>Answer:</strong> Sputnik 1 - Sputnik 1 was launched by the Soviet Union in 1957 and was the first artificial satellite to orbit Earth.</p>
+        </div>
+
+        <div class="info">
+            <h3>10. What is the Milky Way?</h3>
+            <p><strong>Answer:</strong> The Milky Way is the galaxy that contains our solar system. It is a barred spiral galaxy with hundreds of billions of stars.</p>
+        </div>
+
+        <div class="info">
+            <h3>11. How many planets are in our solar system?</h3>
+            <p><strong>Answer:</strong> 8 - Our solar system consists of eight planets: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune.</p>
+        </div>
+
+        <div class="info">
+            <h3>12. What phenomenon is responsible for the creation of stars?</h3>
+            <p><strong>Answer:</strong> Nebulas - Stars form in nebulas, which are large clouds of gas and dust. Gravity causes parts of these clouds to collapse, forming stars.</p>
+        </div>
+
+        <div class="info">
+            <h3>13. Which of the following is not a type of galaxy?</h3>
+            <p><strong>Answer:</strong> Cubic - There are three main types of galaxies: spiral, elliptical, and irregular, but cubic is not one of them.</p>
+        </div>
+
+        <div class="info">
+            <h3>14. What is the event horizon of a black hole?</h3>
+            <p><strong>Answer:</strong> The event horizon is the boundary around a black hole beyond which nothing, not even light, can escape due to the immense gravitational pull.</p>
+        </div>
+
+        <div class="info">
+            <h3>15. What was the name of the first human to go to space?</h3>
+            <p><strong>Answer:</strong> Yuri Gagarin - Yuri Gagarin was a Soviet cosmonaut and the first human to travel into space in 1961 aboard Vostok 1.</p>
+        </div>
+    </section>
+
+    <section class="interactive-planet">
+        <h2>Interactive Planet Viewer</h2>
+        <div class="planet-container">
+            <form action="{% url 'planet_info' %}" method="post">
+                {% csrf_token %}
+                <button name="planet" value="mars" class="btn">See Mars</button>
+                <button name="planet" value="jupiter" class="btn">See Jupiter</button>
+                <button name="planet" value="saturn" class="btn">See Saturn</button>
+            </form>
+        </div>
+        {% if planet_info %}
+            <div id="planet-info" class="planet-info">
+                <h3>{{ planet_info.name }}</h3>
+                <p>{{ planet_info.description }}</p>
+                <img src="{{ planet_info.image_url }}" alt="{{ planet_info.name }}" />
+            </div>
+        {% endif %}
+    </section>
+
+    <section class="endnote">
+        <h2>Ready for More?</h2>
+        <p>Explore more about the universe through our <a href="{% url 'stars_explore' %}">Explore the Stars</a> section!</p>
+    </section>
+</div>
+{% endblock %}

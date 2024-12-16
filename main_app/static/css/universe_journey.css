@@ -1,0 +1,28 @@
+.journey-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}
+
+.quiz-section, .space-facts, .interactive-planet {
+    margin-top: 20px;
+}
+
+#quiz-feedback {
+    font-size: 18px;
+    font-weight: bold;
+    color: green;
+}

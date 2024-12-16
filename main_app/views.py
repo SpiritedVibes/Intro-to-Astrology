@@ -8,7 +8,8 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
-from .models import Quiz, QuizResult, Question
+from .models import Quiz, QuizResult, Question, UserProfile, PlanetInfo
+from .forms import UserProfileForm
 
 
 def unauthorized(request):
@@ -75,12 +76,6 @@ def take_quiz(request, pk):
     
     return render(request, 'quiz/quiz.html', {'quiz': quiz})
 
-from django.shortcuts import get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
-from .models import Quiz, QuizResult
-
 @login_required
 def submit_quiz(request, quiz_id):
     if request.method == 'POST':
@@ -109,13 +104,166 @@ def submit_quiz(request, quiz_id):
             'total_questions': questions.count(),
         })
     
+
+def explore_universe(request):
+    return render(request, 'universe_explore.html')
+
+def journey_start(request):
+    return render(request, 'universe_journey.html')
+
+def start_journey(request):
+    space_facts = {
+        'largest_planet': {
+            'title': "The Largest Planet",
+            'description': "The largest planet in our solar system is Jupiter! It's a gas giant with a Great Red Spot, which is a massive storm.",
+            'more_info': "Jupiter has a diameter of 142,984 km, and it's so large that more than 1,300 Earths could fit inside it!"
+        },
+        'closest_star': {
+            'title': "The Closest Star",
+            'description': "The closest star to Earth is the Sun! It's our primary source of light and energy.",
+            'more_info': "The Sun is about 93 million miles away from Earth, and it's a medium-sized star, classified as a G-type main-sequence star."
+        },
+        'closest_galaxy': {
+            'title': "The Closest Galaxy",
+            'description': "The Andromeda Galaxy is the closest large galaxy to the Milky Way. It's about 2.537 million light-years away.",
+            'more_info': "Andromeda is on a collision course with the Milky Way, but don't worry—it will take about 4 billion years before they merge!"
+        },
+        'black_hole': {
+            'title': "What is a Black Hole?",
+            'description': "A black hole is a region of space where gravity is so strong that not even light can escape.",
+            'more_info': "Black holes are formed when massive stars collapse under their own gravity. Their event horizon is the boundary beyond which nothing can return."
+        },
+        'sun_fuel': {
+            'title': "The Sun's Fuel",
+            'description': "The Sun's energy is powered by nuclear fusion of hydrogen atoms into helium in its core.",
+            'more_info': "This process releases an enormous amount of energy, which is what powers the Sun and gives us light and warmth."
+        },
+        'mars': {
+            'title': "The Red Planet",
+            'description': "Mars is known as the Red Planet due to its reddish appearance, caused by iron oxide (rust) on its surface.",
+            'more_info': "Mars has the highest mountain in the solar system, Olympus Mons, and it has two moons, Phobos and Deimos."
+        },
+        'jupiter_moons': {
+            'title': "Moons of Jupiter",
+            'description': "Jupiter has 79 moons, the largest of which is Ganymede, which is even larger than the planet Mercury!",
+            'more_info': "Jupiter's moons are diverse, and some may even have subsurface oceans that could support life."
+        },
+        'venus': {
+            'title': "The Longest Day",
+            'description': "Venus has the longest day of any planet in our solar system. It takes 243 Earth days to complete one full rotation!",
+            'more_info': "Interestingly, Venus' day is longer than its year, which only takes 225 Earth days to orbit the Sun."
+        },
+        'sputnik': {
+            'title': "The First Artificial Satellite",
+            'description': "Sputnik 1 was the first artificial satellite to orbit the Earth, launched by the Soviet Union in 1957.",
+            'more_info': "It marked the beginning of the space race and was a major milestone in space exploration history."
+        },
+        'milky_way': {
+            'title': "The Milky Way",
+            'description': "The Milky Way is a spiral galaxy that contains our solar system and billions of stars.",
+            'more_info': "It's estimated that there are over 100 billion stars in the Milky Way, and it's just one of the billions of galaxies in the universe."
+        },
+        'planet_count': {
+            'title': "How Many Planets?",
+            'description': "There are 8 planets in our solar system. They are: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune.",
+            'more_info': "Pluto was once considered the 9th planet, but it was reclassified as a dwarf planet in 2006."
+        },
+        'nebula': {
+            'title': "Nebulas and Star Formation",
+            'description': "Nebulas are large clouds of gas and dust where new stars are born.",
+            'more_info': "The most famous nebula is the Orion Nebula, where thousands of new stars are being formed."
+        },
+        'galaxies': {
+            'title': "Types of Galaxies",
+            'description': "There are three main types of galaxies: spiral, elliptical, and irregular.",
+            'more_info': "The Milky Way is a spiral galaxy, while the Andromeda Galaxy is also spiral, and galaxies like the Messier 87 are elliptical."
+        },
+        'event_horizon': {
+            'title': "The Event Horizon",
+            'description': "The event horizon is the boundary around a black hole beyond which nothing, not even light, can escape.",
+            'more_info': "Once something crosses this boundary, it's lost to the black hole forever."
+        },
+        'first_in_space': {
+            'title': "First Human in Space",
+            'description': "Yuri Gagarin was the first human to go into space, orbiting the Earth on April 12, 1961.",
+            'more_info': "He made just one orbit around Earth in his spacecraft, Vostok 1, and made history as the first space traveler."
+        },
+    }
+
+    
+    selected_fact = request.GET.get('fact')
+    fact = "Welcome to your space exploration! Click a button to start your journey."
+    more_info = ""
+
+    if selected_fact and selected_fact in space_facts:
+        fact = space_facts[selected_fact]['description']
+        more_info = space_facts[selected_fact]['more_info']
+
+    return render(request, 'universe_journey.html', {'fact': fact, 'more_info': more_info, 'space_facts': space_facts})
+
+def quiz_answer(request):
+    if request.method == 'POST':
+        selected_planet = request.POST.get('planet')
+        
+        if selected_planet == 'Mercury':
+            quiz_feedback = "Correct! Mercury is indeed the closest planet to the Sun."
+        else:
+            quiz_feedback = "Oops! The correct answer is Mercury."
+        
+        return render(request, 'universe_explore.html', {'quiz_feedback': quiz_feedback})
+
+def planet_info(request):
+    planet_name = request.POST.get('planet')
+    planet_info = None
+
+    if planet_name == 'mars':
+        planet_info = PlanetInfo(name='Mars', description='Mars is the 4th planet from the Sun and is known for its reddish appearance.', image_url='https://via.placeholder.com/300?text=Mars')
+    elif planet_name == 'jupiter':
+        planet_info = PlanetInfo(name='Jupiter', description='Jupiter is the largest planet in our solar system, with a massive storm called the Great Red Spot.', image_url='https://via.placeholder.com/300?text=Jupiter')
+    elif planet_name == 'saturn':
+        planet_info = PlanetInfo(name='Saturn', description='Saturn is known for its stunning rings made of ice and rock particles.', image_url='https://via.placeholder.com/300?text=Saturn')
+
+    return render(request, 'universe_explore.html', {'planet_info': planet_info})
+
+
+def explore_stars(request):
+    return render(request, 'stars_explore.html')
+
 @login_required
 def user_dashboard(request):
     user_results = QuizResult.objects.filter(user=request.user).select_related('quiz')
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
 
     return render(request, 'user_dashboard.html', {
         'user_results': user_results,
+        'user_profile': user_profile
     })
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            UserProfile.objects.create(user=user)
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'registration/register.html', {'form': form})
+
+@login_required
+def update_profile(request):
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            return redirect('user_dashboard')
+    else:
+        form = UserProfileForm(instance=user_profile)
+
+    return render(request, 'update_profile.html', {'form': form})
 
 def signup(request):
     if request.method == 'POST':

@@ -2,9 +2,19 @@
 
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+
 {% block content %}
 <div class="dashboard-container">
     <h1>{{ request.user.username }}'s Quiz Dashboard</h1>
+
+    <div class="user-profile">
+        <h2>Welcome, {{ user.username }}</h2>
+        <p>Astrology Sign: {{ user_profile.astrology_sign }}</p>
+        <p>Today's Horoscope: {{ user_profile.daily_horoscope }}</p>
+        <p>Birth Date: {% if user_profile.birth_date %}{{ user_profile.birth_date|date:"F j, Y" }}{% else %}Not set{% endif %}</p>
+        
+        <a href="{% url 'update_profile' %}" class="btn">Update Profile</a>
+    </div>
 
     {% if user_results %}
         <table class="results-table">

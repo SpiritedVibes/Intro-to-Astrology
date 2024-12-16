@@ -6,6 +6,13 @@ urlpatterns = [
     path('', views.Home.as_view(), name='home'),
     path('about/', views.about, name='about'),
     path('dashboard/', views.user_dashboard, name='user_dashboard'),
+    path('update-profile/', views.update_profile, name='update_profile'),
+
+    path('explore-universe/', views.explore_universe, name='universe_explore'),
+    path('universe_journey/', views.journey_start, name='universe_journey'),
+    path('quiz-answer/', views.quiz_answer, name='quiz_answer'),
+    path('planet-info/', views.planet_info, name='planet_info'),
+    path('explore-stars/', views.explore_stars, name='stars_explore'),
 
     path('quizzes/', views.quiz_list, name='quiz_list'),
     path('quiz/<int:pk>/', QuizDetailView.as_view(), name='quiz_detail'),

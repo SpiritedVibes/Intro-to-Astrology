@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/universe_journey.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="journey-container">
+    <header>
+        <h1>Journey Through the Universe</h1>
+        <p>Click on a topic to learn more about our universe!</p>
+    </header>
+
+    <section class="exploration-section">
+        <h2>Explore Space Facts</h2>
+        <p>{{ fact }}</p>
+        {% if more_info %}
+            <p><strong>More Info:</strong> {{ more_info }}</p>
+        {% endif %}
+        
+        <div class="buttons">
+            {% for fact_key, fact_info in space_facts.items %}
+                <a href="?fact={{ fact_key }}" class="btn">{{ fact_info.title }}</a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="endnote">
+        <h2>Ready to Explore More?</h2>
+        <p>Continue your journey by checking out <a href="{% url 'stars_explore' %}">Explore the Stars</a> for more cosmic wonders!</p>
+    </section>
+</div>
+{% endblock %}
