@@ -229,6 +229,9 @@ def planet_info(request):
 def explore_stars(request):
     return render(request, 'stars_explore.html')
 
+def quantum_mechanics(request):
+    return render(request, 'quantum_mechanics.html')
+
 @login_required
 def user_dashboard(request):
     user_results = QuizResult.objects.filter(user=request.user).select_related('quiz')

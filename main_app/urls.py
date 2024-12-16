@@ -13,6 +13,7 @@ urlpatterns = [
     path('quiz-answer/', views.quiz_answer, name='quiz_answer'),
     path('planet-info/', views.planet_info, name='planet_info'),
     path('explore-stars/', views.explore_stars, name='stars_explore'),
+    path('quantum-mechanics/', views.quantum_mechanics, name='quantum_mechanics'),
 
     path('quizzes/', views.quiz_list, name='quiz_list'),
     path('quiz/<int:pk>/', QuizDetailView.as_view(), name='quiz_detail'),

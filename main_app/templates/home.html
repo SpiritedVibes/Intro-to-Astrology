@@ -25,6 +25,12 @@
         </a>
     </div>
 
+    <div class="card">
+        <a href="{% url 'quantum_mechanics' %}">
+            <h2>Begin Learning Quantum Mechanics</h2>
+        </a>
+    </div>
+
     {% if not user.is_authenticated %}
         <section>
             <form action="{% url 'home' %}" method="post" class="login">
