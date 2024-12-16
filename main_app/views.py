@@ -108,6 +108,14 @@ def submit_quiz(request, quiz_id):
             'score': score,
             'total_questions': questions.count(),
         })
+    
+@login_required
+def user_dashboard(request):
+    user_results = QuizResult.objects.filter(user=request.user).select_related('quiz')
+
+    return render(request, 'user_dashboard.html', {
+        'user_results': user_results,
+    })
 
 def signup(request):
     if request.method == 'POST':

@@ -5,6 +5,7 @@ from .views import QuizDetailView, CreateQuizView, DeleteQuizView, UpdateQuizVie
 urlpatterns = [
     path('', views.Home.as_view(), name='home'),
     path('about/', views.about, name='about'),
+    path('dashboard/', views.user_dashboard, name='user_dashboard'),
 
     path('quizzes/', views.quiz_list, name='quiz_list'),
     path('quiz/<int:pk>/', QuizDetailView.as_view(), name='quiz_detail'),
