@@ -6,6 +6,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 from .models import Quiz, QuizResult, Question
 
@@ -74,15 +75,39 @@ def take_quiz(request, pk):
     
     return render(request, 'quiz/quiz.html', {'quiz': quiz})
 
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from .models import Quiz, QuizResult
+
 @login_required
-def quiz_result_view(request, quiz_id):
-    quiz = get_object_or_404(Quiz, pk=quiz_id)
-    quiz_result = QuizResult.objects.filter(quiz=quiz, user=request.user).last()
-    return render(request, 'quiz/quiz_result.html', {
-        'quiz': quiz,
-        'score': quiz_result.score,
-        'total_questions': quiz.questions.count(),
-    })
+def submit_quiz(request, quiz_id):
+    if request.method == 'POST':
+        quiz = get_object_or_404(Quiz, pk=quiz_id)
+        questions = quiz.questions.all()
+        answers = {}
+        score = 0
+
+        for question in questions:
+            selected_answer = request.POST.get(f'question_{question.id}')
+            if selected_answer: 
+                answers[question.id] = selected_answer
+                if selected_answer == question.correct_answer:
+                    score += 1
+
+        QuizResult.objects.create(
+            quiz=quiz,
+            user=request.user,
+            score=score,
+            answers=answers
+        )
+
+        return render(request, 'quiz/quiz_results.html', {
+            'quiz': quiz,
+            'score': score,
+            'total_questions': questions.count(),
+        })
 
 def signup(request):
     if request.method == 'POST':
@@ -102,59 +127,46 @@ def signup(request):
 class CreateQuizView(TeacherRequiredMixin, CreateView):
     model = Quiz
     fields = ['title', 'description']
-    template_name = 'main_app/quiz_form.html'
-
+    
     def form_valid(self, form):
+    
         form.instance.user = self.request.user
-        quiz = form.save()  # Save the quiz instance
-
-        # Process questions from the form
-        question_count = int(self.request.POST.get('question_count', 1))
-        for i in range(1, question_count + 1):
-            question_text = self.request.POST.get(f'question_text_{i}')
-            answers = [
-                self.request.POST.get(f'answer_{j}_{i}') for j in range(1, 5)
-            ]
-            correct_answer = self.request.POST.get(f'correct_answer_{i}')
-
-            if question_text and all(answers) and correct_answer:
-                Question.objects.create(
-                    quiz=quiz,
-                    question_text=question_text,
-                    answer_1=answers[0],
-                    answer_2=answers[1],
-                    answer_3=answers[2],
-                    answer_4=answers[3],
-                    correct_answer=correct_answer,
-                )
-
+        quiz = form.save()
+        
+    
+        question_count = len(self.request.POST.getlist('question_text_1')) 
+        
+        for i in range(question_count):
+            question_text = self.request.POST.get(f'question_text_{i+1}')
+            answer_1 = self.request.POST.get(f'answer_1_{i+1}')
+            answer_2 = self.request.POST.get(f'answer_2_{i+1}')
+            answer_3 = self.request.POST.get(f'answer_3_{i+1}')
+            answer_4 = self.request.POST.get(f'answer_4_{i+1}')
+            correct_answer = self.request.POST.get(f'correct_answer_{i+1}')
+            
+            
+            question = Question(
+                quiz=quiz,
+                question_text=question_text,
+                answer_1=answer_1,
+                answer_2=answer_2,
+                answer_3=answer_3,
+                answer_4=answer_4,
+                correct_answer=correct_answer,
+            )
+            question.save()
+        
+        
+        if self.request.POST.get('add_question'):
+            return HttpResponseRedirect(self.request.path)
+        
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        # Determine how many questions to render
-        question_count = int(self.request.POST.get('question_count', 1))
-        if self.request.POST.get('add_question') == 'True':
-            question_count += 1
-
-        # Populate the existing or empty question data
-        context['question_data'] = [
-            {
-                'question_text': self.request.POST.get(f'question_text_{i}', ''),
-                'answer_1': self.request.POST.get(f'answer_1_{i}', ''),
-                'answer_2': self.request.POST.get(f'answer_2_{i}', ''),
-                'answer_3': self.request.POST.get(f'answer_3_{i}', ''),
-                'answer_4': self.request.POST.get(f'answer_4_{i}', ''),
-                'correct_answer': self.request.POST.get(f'correct_answer_{i}', ''),
-            }
-            for i in range(1, question_count + 1)
-        ]
-        context['question_count'] = question_count
+        context['question_data'] = [] 
         return context
-
-
-
+        
 class UpdateQuizView(TeacherRequiredMixin, UpdateView):
     model = Quiz
     fields = ['title', 'description']
@@ -165,6 +177,7 @@ class UpdateQuizView(TeacherRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+       
         context['question_data'] = self.object.questions.all()
         return context
 

@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block head %}
-<link rel="stylesheet" href="{% static 'css/quiz/quiz_detail.css' %}" />
+<link rel="stylesheet" href="{% static 'css/quiz/_detail.css' %}" />
 {% endblock %}
 
 {% block content %}
@@ -11,7 +11,7 @@
     <h1 class="quiz-title">{{ quiz.title }}</h1>
     <p class="quiz-description">{{ quiz.description }}</p>
 
-    <form method="POST">
+    <form method="POST" action="{% url 'submit_quiz' quiz.id %}">
         {% csrf_token %}
         <div class="questions">
             <h2>Questions</h2>
@@ -45,11 +45,10 @@
                         </li>
                     </ul>
                 </div>
-            {% empty %}
-                <p>No questions available for this quiz.</p>
             {% endfor %}
         </div>
         <button type="submit" class="submit-button">Submit</button>
     </form>
+    
 </div>
 {% endblock %}
