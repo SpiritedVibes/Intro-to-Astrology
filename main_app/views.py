@@ -216,14 +216,64 @@ def planet_info(request):
     planet_name = request.POST.get('planet')
     planet_info = None
 
-    if planet_name == 'mars':
-        planet_info = PlanetInfo(name='Mars', description='Mars is the 4th planet from the Sun and is known for its reddish appearance.', image_url='https://via.placeholder.com/300?text=Mars')
-    elif planet_name == 'jupiter':
-        planet_info = PlanetInfo(name='Jupiter', description='Jupiter is the largest planet in our solar system, with a massive storm called the Great Red Spot.', image_url='https://via.placeholder.com/300?text=Jupiter')
-    elif planet_name == 'saturn':
-        planet_info = PlanetInfo(name='Saturn', description='Saturn is known for its stunning rings made of ice and rock particles.', image_url='https://via.placeholder.com/300?text=Saturn')
+    planet_data = {
+        'mercury': {
+            'name': 'Mercury',
+            'description': 'Mercury is the closest planet to the Sun and the smallest in our solar system.',
+            'image_url': 'main_app/static/images/mercury.jpg'
+        },
+        'venus': {
+            'name': 'Venus',
+            'description': 'Venus is the second planet from the Sun and has a thick, toxic atmosphere.',
+            'image_url': 'main_app/static/images/Venus.webp'
+        },
+        'earth': {
+            'name': 'Earth',
+            'description': 'Earth is our home planet and the only one known to support life.',
+            'image_url': 'main_app/static/images/Earth.jpg'
+        },
+        'mars': {
+            'name': 'Mars',
+            'description': 'Mars is the 4th planet from the Sun and is known for its reddish appearance.',
+            'image_url': 'main_app/static/images/Mars.webp'
+        },
+        'jupiter': {
+            'name': 'Jupiter',
+            'description': 'Jupiter is the largest planet in our solar system, with a massive storm called the Great Red Spot.',
+            'image_url': 'main_app/static/images/Jupiter.jpeg'
+        },
+        'saturn': {
+            'name': 'Saturn',
+            'description': 'Saturn is known for its stunning rings made of ice and rock particles.',
+            'image_url': 'main_app/static/images/Saturn.jpg'
+        },
+        'uranus': {
+            'name': 'Uranus',
+            'description': 'Uranus is a pale blue planet that rotates on its side, making it unique in our solar system.',
+            'image_url': 'main_app/static/images/Uranus.jpg'
+        },
+        'neptune': {
+            'name': 'Neptune',
+            'description': 'Neptune is a deep blue planet known for its strong winds and storms.',
+            'image_url': 'main_app/static/images/Uranus.jpg'
+        },
+        'pluto': {
+            'name': 'Pluto',
+            'description': 'Pluto, once considered the ninth planet, is now classified as a dwarf planet.',
+            'image_url': 'main_app/static/images/Pluto.jpg'
+        }
+    }
+
+    if planet_name and planet_name.lower() in planet_data:
+        planet = planet_data[planet_name.lower()]
+        planet_info = PlanetInfo(
+            name=planet['name'],
+            description=planet['description'],
+            image_url=planet['image_url']
+        )
 
     return render(request, 'universe_explore.html', {'planet_info': planet_info})
+
 
 
 def explore_stars(request):

@@ -23,7 +23,7 @@ urlpatterns = [
 
     path('quizzes/', views.quiz_list, name='quiz_list'),
     path('quiz/<int:pk>/', QuizDetailView.as_view(), name='quiz_detail'),
-     path('quiz/<int:quiz_id>/submit/', views.submit_quiz, name='submit_quiz'),
+    path('quiz/<int:quiz_id>/submit/', views.submit_quiz, name='submit_quiz'),
 
     path('quiz/create/', CreateQuizView.as_view(), name='create_quiz'),
     path('quiz/<int:pk>/update/', UpdateQuizView.as_view(), name='update_quiz'),
