@@ -75,6 +75,7 @@ Future Improvements 🌟
 
 Introduce visualizations for star maps and constellations.
 Expand content to include advanced quantum mechanics topics.
+Ways to create and test equations.
 
 
 Contributions 🤝
