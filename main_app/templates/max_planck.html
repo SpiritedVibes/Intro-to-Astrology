@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/galactic_theme.css' %}">
+    {% endblock %}
+
+    {% block content %}
+        <h1>Max Planck: The Father of Quantum Theory</h1>
+        <p>Exploring the Life and Achievements of One of Physics' Greatest Minds</p>
+
+    <div class="container">
+        <h2>About Max Planck</h2>
+        <p>
+            Max Karl Ernst Ludwig Planck (1858-1947) was a German theoretical physicist whose discovery of 
+            **quantum theory** revolutionized physics. His work laid the groundwork for modern science, 
+            including quantum mechanics and cosmology.
+        </p>
+
+        <h2>Key Achievements</h2>
+        <ul>
+            <li><strong>1900:</strong> Introduced the **Planck constant (h)** and the concept of quantized energy levels.</li>
+            <li><strong>Quantum Theory:</strong> Solved the **blackbody radiation problem**, leading to the birth of quantum mechanics.</li>
+            <li><strong>Nobel Prize (1918):</strong> Awarded the Nobel Prize in Physics for his discovery of energy quanta.</li>
+            <li><strong>Planck's Law:</strong> Developed the mathematical formula to describe radiation emitted by a blackbody.</li>
+            <li><strong>Influence on Modern Physics:</strong> His work inspired physicists like Einstein, Schrödinger, and Bohr.</li>
+        </ul>
+
+        <h2>Contributions to Science</h2>
+        <p>
+            Planck's work on blackbody radiation introduced the radical idea that energy is emitted in discrete packets, or **quanta**, 
+            rather than a continuous wave. This challenged classical physics and led to the development of quantum mechanics.
+        </p>
+        <p>
+            His constant, **h = 6.626 x 10⁻³⁴ Js**, became one of the fundamental constants in physics, used to calculate the energy of photons:
+            <br><br>
+            <em>E = hv</em> (where E is energy, h is Planck's constant, and v is frequency).
+        </p>
+
+        <h2>Legacy</h2>
+        <p>
+            Planck's discoveries paved the way for advancements in atomic and subatomic physics, quantum computing, and cosmology. 
+            The **Planck satellite**, launched in 2009, honored his name by studying the cosmic microwave background radiation, 
+            helping scientists understand the universe's origins.
+        </p>
+
+        <h3>Learn More</h3>
+        <p>
+            For further reading, visit the <a href="https://en.wikipedia.org/wiki/Max_Planck" target="_blank">Wikipedia page on Max Planck</a> 
+            or explore resources on quantum mechanics.
+        </p>
+    </div>
+    {% endblock %}

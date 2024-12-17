@@ -15,6 +15,12 @@ urlpatterns = [
     path('explore-stars/', views.explore_stars, name='stars_explore'),
     path('quantum-mechanics/', views.quantum_mechanics, name='quantum_mechanics'),
 
+    path('max-planck/', views.max_planck, name='max_planck'),
+    path('einstein-quantum/', views.einstein_quantum, name='einstein_quantum'),
+    path('bohr-quantum/', views.bohr_quantum, name='bohr_quantum'),
+    path('schrodinger-quantum/', views.schrodinger_quantum, name='schrodinger_quantum'),
+    path('heisenberg-quantum/', views.heisenberg_quantum, name='heisenberg_quantum'),
+
     path('quizzes/', views.quiz_list, name='quiz_list'),
     path('quiz/<int:pk>/', QuizDetailView.as_view(), name='quiz_detail'),
      path('quiz/<int:quiz_id>/submit/', views.submit_quiz, name='submit_quiz'),

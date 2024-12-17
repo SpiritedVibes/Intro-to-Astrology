@@ -232,6 +232,21 @@ def explore_stars(request):
 def quantum_mechanics(request):
     return render(request, 'quantum_mechanics.html')
 
+def max_planck(request):
+    return render(request, 'max_planck.html')
+
+def einstein_quantum(request):
+    return render(request, 'einstein_quantum.html')
+
+def bohr_quantum(request):
+    return render(request, 'bohr_quantum.html')
+
+def schrodinger_quantum(request):
+    return render(request, 'schrodinger_quantum.html')
+
+def heisenberg_quantum(request):
+    return render(request, 'heisenberg_quantum.html')
+
 @login_required
 def user_dashboard(request):
     user_results = QuizResult.objects.filter(user=request.user).select_related('quiz')

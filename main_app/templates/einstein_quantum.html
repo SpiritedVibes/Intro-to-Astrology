@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'einstein_quantum.css' %}">
+    {% endblock %}
+
+    {% block content %}
+        <h1>Albert Einstein: Contributions to Quantum Mechanics</h1>
+        <p>Exploring the Legacy of the Genius Behind Modern Physics</p>
+
+    <div class="container">
+        <h2>About Albert Einstein</h2>
+        <p>
+            Albert Einstein (1879-1955) was a German-born theoretical physicist known for his revolutionary 
+            contributions to science. While famous for his work on relativity, Einstein made groundbreaking 
+            contributions to the development of quantum mechanics.
+        </p>
+
+        <h2>Key Contributions to Quantum Mechanics</h2>
+        <ul>
+            <li>
+                <strong>1905:</strong> Introduced the <strong>Photoelectric Effect</strong>, explaining how light behaves as particles (**photons**). 
+                This discovery earned him the <strong>Nobel Prize in Physics (1921)</strong>.
+            </li>
+            <li>
+                <strong>Quantum Theory of Light:</strong> Proposed that light has both **wave-like and particle-like properties**, 
+                laying the foundation for quantum mechanics.
+            </li>
+            <li>
+                <strong>Einstein's Relation (E = hv):</strong> Showed that the energy of a photon is proportional to its frequency, 
+                where **h** is Planck's constant.
+            </li>
+            <li>
+                <strong>1909:</strong> Predicted the concept of **wave-particle duality**, describing light's dual nature before its experimental confirmation.
+            </li>
+            <li>
+                <strong>Bose-Einstein Statistics (1924):</strong> Collaborated with Satyendra Nath Bose to predict the behavior of particles 
+                (**bosons**) at extremely low temperatures, leading to the discovery of the **Bose-Einstein Condensate**.
+            </li>
+            <li>
+                <strong>Quantum Theory Debate:</strong> Einstein famously challenged the completeness of quantum mechanics, 
+                saying, <em>"God does not play dice with the universe."</em> His debates with Niels Bohr helped refine quantum theory.
+            </li>
+        </ul>
+
+        <h2>Impact on Quantum Mechanics</h2>
+        <p>
+            Einstein's work on the photoelectric effect and his quantum theory of light were pivotal in proving that energy is quantized. 
+            His discoveries paved the way for further advancements, such as quantum field theory, particle physics, and quantum computing.
+        </p>
+        <p>
+            While he disagreed with the probabilistic nature of quantum mechanics, his challenges inspired scientists to explore and 
+            better understand quantum phenomena, leading to the development of modern physics.
+        </p>
+
+        <h2>Legacy</h2>
+        <p>
+            Albert Einstein's contributions to quantum mechanics shaped our understanding of light, matter, and energy. 
+            His ideas continue to influence scientific research, technology, and cosmology.
+        </p>
+
+        <h3>Learn More</h3>
+        <p>
+            For further reading, visit the <a href="https://en.wikipedia.org/wiki/Albert_Einstein" target="_blank">Wikipedia page on Albert Einstein</a> 
+            or explore resources on quantum mechanics.
+        </p>
+    </div>
+    {% endblock %}

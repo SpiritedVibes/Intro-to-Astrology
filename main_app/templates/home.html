@@ -6,6 +6,27 @@
 {% endblock %}
 
 {% block content %}
+
+<h2>Your gateway to understanding the wonders of the universe!
+
+    Embark on a journey to explore the mysteries of stars, delve into the fundamentals of quantum mechanics, and unravel the secrets of our cosmic home—all in an easy-to-follow, beginner-friendly format.
+    
+    Whether you're curious about how stars are born, the strange duality of particles, or the incredible forces shaping galaxies, this site will guide you step-by-step through the basics of space and science.
+    
+    Ready to learn? Let's take a leap into the cosmos and discover what lies beyond the stars!</h2>
+
+  {% if not user.is_authenticated %}
+        <section>
+            <form action="{% url 'home' %}" method="post" class="login">
+                <h1>Login</h1>
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="hidden" name="next" value="{{ next }}" />
+                <button type="submit" class="btn submit">Login</button>
+            </form>
+        </section>
+    {% endif %}
+
 <div class="card-container">
     <div class="card">
         <a href="{% url 'quiz_list' %}">
@@ -31,16 +52,6 @@
         </a>
     </div>
 
-    {% if not user.is_authenticated %}
-        <section>
-            <form action="{% url 'home' %}" method="post" class="login">
-                <h1>Login</h1>
-                {% csrf_token %}
-                {{ form.as_p }}
-                <input type="hidden" name="next" value="{{ next }}" />
-                <button type="submit" class="btn submit">Login</button>
-            </form>
-        </section>
-    {% endif %}
+  
 </div>
 {% endblock %}
