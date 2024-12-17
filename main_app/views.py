@@ -10,6 +10,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 from .models import Quiz, QuizResult, Question, UserProfile, PlanetInfo
 from .forms import UserProfileForm
+import requests
 
 
 def unauthorized(request):
@@ -275,36 +276,84 @@ def planet_info(request):
     return render(request, 'universe_explore.html', {'planet_info': planet_info})
 
 
-
 def explore_stars(request):
     return render(request, 'stars_explore.html')
+
 
 def quantum_mechanics(request):
     return render(request, 'quantum_mechanics.html')
 
+
 def max_planck(request):
     return render(request, 'max_planck.html')
+
 
 def einstein_quantum(request):
     return render(request, 'einstein_quantum.html')
 
+
 def bohr_quantum(request):
     return render(request, 'bohr_quantum.html')
+
 
 def schrodinger_quantum(request):
     return render(request, 'schrodinger_quantum.html')
 
+
 def heisenberg_quantum(request):
     return render(request, 'heisenberg_quantum.html')
+
+
+
+def get_daily_horoscope(sign, day="TODAY"):
+    base_url = "https://horoscope-app-api.vercel.app/api/v1/get-horoscope/daily"
+    
+    params = {
+        "sign": sign,
+        "day": day
+    }
+    
+    try:
+        response = requests.get(base_url, params=params)
+
+        if response.status_code == 200:  
+            
+            horoscope_data = response.json()
+            
+            if "data" in horoscope_data:
+                return horoscope_data["data"]
+
+            else:
+                return "Horoscope information not available."
+        else:
+            return f"Error: {response.status_code}. Could not fetch horoscope."
+    except Exception as e:
+        return f"Error: {str(e)}"
+
 
 @login_required
 def user_dashboard(request):
     user_results = QuizResult.objects.filter(user=request.user).select_related('quiz')
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
 
+    if user_profile.astrology_sign:
+        daily_horoscope = get_daily_horoscope(user_profile.astrology_sign)
+    else:
+        daily_horoscope = "Astrology sign not set."
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            return redirect('user_dashboard')
+    else:
+        form = UserProfileForm(instance=user_profile)
+
     return render(request, 'user_dashboard.html', {
         'user_results': user_results,
-        'user_profile': user_profile
+        'form': form,
+        'user_profile': user_profile,
+        'daily_horoscope': daily_horoscope 
     })
 
 def register(request):
@@ -319,19 +368,6 @@ def register(request):
 
     return render(request, 'registration/register.html', {'form': form})
 
-@login_required
-def update_profile(request):
-    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
-
-    if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=user_profile)
-        if form.is_valid():
-            form.save()
-            return redirect('user_dashboard')
-    else:
-        form = UserProfileForm(instance=user_profile)
-
-    return render(request, 'update_profile.html', {'form': form})
 
 def signup(request):
     if request.method == 'POST':
@@ -351,45 +387,60 @@ def signup(request):
 class CreateQuizView(TeacherRequiredMixin, CreateView):
     model = Quiz
     fields = ['title', 'description']
-    
+
     def form_valid(self, form):
-    
         form.instance.user = self.request.user
         quiz = form.save()
-        
-    
-        question_count = len(self.request.POST.getlist('question_text_1')) 
-        
-        for i in range(question_count):
-            question_text = self.request.POST.get(f'question_text_{i+1}')
-            answer_1 = self.request.POST.get(f'answer_1_{i+1}')
-            answer_2 = self.request.POST.get(f'answer_2_{i+1}')
-            answer_3 = self.request.POST.get(f'answer_3_{i+1}')
-            answer_4 = self.request.POST.get(f'answer_4_{i+1}')
-            correct_answer = self.request.POST.get(f'correct_answer_{i+1}')
+
+        question_index = 1
+        while f'question_text_{question_index}' in self.request.POST:
+            question_text = self.request.POST.get(f'question_text_{question_index}')
+            answer_1 = self.request.POST.get(f'answer_1_{question_index}')
+            answer_2 = self.request.POST.get(f'answer_2_{question_index}')
+            answer_3 = self.request.POST.get(f'answer_3_{question_index}')
+            answer_4 = self.request.POST.get(f'answer_4_{question_index}')
+            correct_answer = self.request.POST.get(f'correct_answer_{question_index}')
+
+            if question_text:
+                question = Question(
+                    quiz=quiz,
+                    question_text=question_text,
+                    answer_1=answer_1,
+                    answer_2=answer_2,
+                    answer_3=answer_3,
+                    answer_4=answer_4,
+                    correct_answer=correct_answer,
+                )
+                question.save()
+            question_index += 1
+
+        if 'add_question' in self.request.POST:
             
-            
-            question = Question(
-                quiz=quiz,
-                question_text=question_text,
-                answer_1=answer_1,
-                answer_2=answer_2,
-                answer_3=answer_3,
-                answer_4=answer_4,
-                correct_answer=correct_answer,
-            )
-            question.save()
-        
-        
-        if self.request.POST.get('add_question'):
-            return HttpResponseRedirect(self.request.path)
-        
+            return self.render_to_response(self.get_context_data())
+
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['question_data'] = [] 
+
+       
+        question_data = []
+        question_index = 1
+        while f'question_text_{question_index}' in self.request.POST:
+            question_data.append({
+                'question_text': self.request.POST.get(f'question_text_{question_index}'),
+                'answer_1': self.request.POST.get(f'answer_1_{question_index}'),
+                'answer_2': self.request.POST.get(f'answer_2_{question_index}'),
+                'answer_3': self.request.POST.get(f'answer_3_{question_index}'),
+                'answer_4': self.request.POST.get(f'answer_4_{question_index}'),
+                'correct_answer': self.request.POST.get(f'correct_answer_{question_index}'),
+            })
+            question_index += 1
+
+        context['question_data'] = question_data
+        context['new_question_index'] = question_index
         return context
+
         
 class UpdateQuizView(TeacherRequiredMixin, UpdateView):
     model = Quiz

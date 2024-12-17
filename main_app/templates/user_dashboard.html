@@ -1,43 +1,36 @@
-{% extends "base.html" %}
-
+{% extends 'base.html' %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/user_dashboard.css' %}" />
+{% endblock %}
 
 {% block content %}
-<div class="dashboard-container">
-    <h1>{{ request.user.username }}'s Quiz Dashboard</h1>
+    <h1>User Dashboard</h1>
 
-    <div class="user-profile">
-        <h2>Welcome, {{ user.username }}</h2>
-        <p>Astrology Sign: {{ user_profile.astrology_sign }}</p>
-        <p>Today's Horoscope: {{ user_profile.daily_horoscope }}</p>
-        <p>Birth Date: {% if user_profile.birth_date %}{{ user_profile.birth_date|date:"F j, Y" }}{% else %}Not set{% endif %}</p>
-        
-        <a href="{% url 'update_profile' %}" class="btn">Update Profile</a>
-    </div>
+    <h2>Your Quiz Results</h2>
+    <ul>
+        {% for result in user_results %}
+            <li>{{ result.quiz.name }} - Score: {{ result.score }}</li> 
+            <td>{{ result.created_at|date:"F j, Y, g:i a" }}</td>
+        {% empty %}
+            <p>No quiz results found.</p>
+        {% endfor %}
+    </ul>
 
-    {% if user_results %}
-        <table class="results-table">
-            <thead>
-                <tr>
-                    <th>Quiz Title</th>
-                    <th>Score</th>
-                    <th>Date Taken</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for result in user_results %}
-                <tr>
-                    <td>{{ result.quiz.title }}</td>
-                    <td>{{ result.score }}</td>
-                    <td>{{ result.created_at|date:"F j, Y, g:i a" }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>You have not taken any quizzes yet.</p>
-    {% endif %}
+    <h2>Update Your Profile</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Update Profile</button>
+    </form>
+
+    <h3>Your Current Profile</h3>
+    <p><strong>Astrology Sign:</strong> {{ user_profile.astrology_sign }}</p>
+    <p><strong>Birth Date:</strong> {{ user_profile.birth_date }}</p>
+
+    <h3>Your Daily Horoscope</h3>
+    <p>{{ daily_horoscope }}</p>
 
     <a href="{% url 'quiz_list' %}" class="btn">Take a Quiz</a>
 </div>

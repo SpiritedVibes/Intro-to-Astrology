@@ -5,12 +5,15 @@ body {
     margin: 0;
     padding: 0;
     line-height: 1.6;
-    background: url('https://source.unsplash.com/1600x900/?galaxy') no-repeat center center fixed;
+    background: url('https://source.unsplash.com/1600x900/?galaxy') no-repeat center center;
     background-size: cover;
+    height: 100%;
+    overflow-y: auto;
   }
 
   .form-container {
     max-width: 800px;
+    max-height: none;
     margin: 50px auto;
     padding: 30px;
     background-color: rgba(0, 0, 0, 0.7);
@@ -18,6 +21,7 @@ body {
     box-shadow: 0 0 15px rgba(0, 204, 255, 0.8);
     box-sizing: border-box;
     backdrop-filter: blur(5px);
+    overflow: visible;
   }
   
   h1 {
