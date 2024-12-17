@@ -62,7 +62,7 @@ Run the Development Server:
 
 bash
 Copy code
-python manage.py runserver
+python3 manage.py runserver
 Access the Site:
 Open your browser and visit http://127.0.0.1:8000/ to explore the site.
 
