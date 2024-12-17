@@ -2,10 +2,15 @@ Intro to Astrology ✨🌌
 Intro to Astrology is an educational platform built using Django and PostgreSQL. The site introduces users to the fascinating world of stars, the universe, and the foundational concepts of quantum mechanics. Designed for beginners, the platform provides easy-to-understand explanations, interactive tools, and engaging content to spark curiosity about the cosmos.
 
 Features 🚀
+
 Educational Content: Learn about astrology, the universe, and fundamental quantum mechanics concepts.
+
 User Authentication: Secure user registration, login, and personalized profile management.
+
 CRUD Functionality: Users can interact with content dynamically, including creating, updating, and deleting resources.
+
 Interactive Quizzes: Test your knowledge with quizzes designed to reinforce learning.
+
 Beginner-Friendly Design: Content is tailored for individuals new to astrology and quantum physics.
 
 
@@ -67,9 +72,11 @@ Access the Site:
 Open your browser and visit http://127.0.0.1:8000/ to explore the site.
 
 Future Improvements 🌟
-Add user progress tracking for quizzes.
+
 Introduce visualizations for star maps and constellations.
 Expand content to include advanced quantum mechanics topics.
+
+
 Contributions 🤝
 Contributions are welcome! To contribute:
 
