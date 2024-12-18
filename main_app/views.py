@@ -10,7 +10,6 @@ from django.http import HttpResponseRedirect
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 from .models import Quiz, QuizResult, Question, UserProfile, PlanetInfo
 from .forms import UserProfileForm
-import requests
 
 
 def unauthorized(request):
