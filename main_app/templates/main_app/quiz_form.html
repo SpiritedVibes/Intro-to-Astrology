@@ -34,34 +34,32 @@
               </div>
           {% endfor %}
       {% else %}
-      <div class="question">
-        <label>Question {{ new_question_index }}:</label>
-        <input type="text" name="question_text_{{ new_question_index }}" required>
-  
-        <label>Answer 1:</label>
-        <input type="text" name="answer_1_{{ new_question_index }}" required>
-        
-        <label>Answer 2:</label>
-        <input type="text" name="answer_2_{{ new_question_index }}" required>
-        
-        <label>Answer 3:</label>
-        <input type="text" name="answer_3_{{ new_question_index }}" required>
-        
-        <label>Answer 4:</label>
-        <input type="text" name="answer_4_{{ new_question_index }}" required>
-  
-        <label>Correct Answer:</label>
-        <select name="correct_answer_{{ new_question_index }}">
-          <option value="answer_1">Answer 1</option>
-          <option value="answer_2">Answer 2</option>
-          <option value="answer_3">Answer 3</option>
-          <option value="answer_4">Answer 4</option>
-        </select>
-      </div>
-    </div>
-  
+          <div class="question">
+              <label>Question 1:</label>
+              <input type="text" name="question_text_1" required>
+              
+              <label>Answer 1:</label>
+              <input type="text" name="answer_1_1" required>
+              
+              <label>Answer 2:</label>
+              <input type="text" name="answer_2_1" required>
+              
+              <label>Answer 3:</label>
+              <input type="text" name="answer_3_1" required>
+              
+              <label>Answer 4:</label>
+              <input type="text" name="answer_4_1" required>
+
+              <label>Correct Answer:</label>
+              <select name="correct_answer_1">
+                  <option value="answer_1">Answer 1</option>
+                  <option value="answer_2">Answer 2</option>
+                  <option value="answer_3">Answer 3</option>
+                  <option value="answer_4">Answer 4</option>
+              </select>
+          </div>
       {% endif %}
   </div>
-<button type="submit" name="add_question">Add Question</button>
+  <button type="submit" name="add_question">Add Question</button>
   <button type="submit">Save Quiz</button>
 </form>
